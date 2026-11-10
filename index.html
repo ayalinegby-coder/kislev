@@ -41,6 +41,34 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .stage > img, #dark { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 #dark { pointer-events: none; z-index: 1; }
 
+/* ---------- Arrow to the decisions board ---------- */
+html { scroll-behavior: smooth; }
+.to-board { position: absolute; z-index: 6; bottom: 1cqw; left: 50%; translate: -50% 0; display: flex; flex-direction: column; align-items: center; gap: .2em; color: var(--paper); text-decoration: none; font-weight: 600; font-size: max(14px, 1.15cqw); text-shadow: 0 1px 6px rgba(0, 0, 0, .9); animation: bob 2.4s ease-in-out infinite; }
+.to-board svg { width: 1.6em; height: 1.6em; stroke: var(--flame); filter: drop-shadow(0 0 6px rgba(240, 178, 60, .6)); }
+.to-board:hover { color: var(--flame); }
+@keyframes bob { 50% { transform: translateY(.35em); } }
+
+/* ---------- Decisions board: one floating lantern per class ---------- */
+.decisions { position: relative; background: #000; min-height: 100vh; padding: 56px max(16px, env(safe-area-inset-right, 0px)) 72px max(16px, env(safe-area-inset-left, 0px)); text-align: center; overflow: hidden; }
+.decisions h2 { margin: 0; font-family: var(--display); font-weight: var(--dw); font-size: clamp(34px, 5vw, 64px); line-height: 1.1; color: var(--flame); text-shadow: 0 0 18px rgba(240, 178, 60, .35); }
+.board-sub { margin: 10px auto 0; max-width: 640px; color: var(--dim); }
+.board-empty { margin: 48px auto 0; max-width: 520px; color: var(--paper-2); }
+.sky { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 18px; max-width: 1500px; margin: 36px auto 0; }
+.float { position: relative; margin: 0; width: clamp(240px, 21vw, 300px); aspect-ratio: 1; animation: drift var(--t, 7s) ease-in-out var(--d, 0s) infinite; }
+.float .ring { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.float .ring text { fill: var(--paper); font-family: var(--body); font-weight: 600; }
+.float .halo { position: absolute; inset: 14%; border-radius: 50%; background: radial-gradient(closest-side, rgba(240, 178, 60, .38), rgba(240, 178, 60, 0)); animation: flicker 2.3s ease-in-out infinite; }
+.float img { position: absolute; left: 50%; top: 21%; height: 41%; translate: -50% 0; }
+.float .name { position: absolute; left: 50%; top: 64%; translate: -50% 0; width: max-content; max-width: 58%; padding: .05em .7em .15em; background: var(--paper); color: var(--ink); border: 1px solid var(--paper-2); font-weight: 700; font-size: clamp(12px, 1vw, 15px); line-height: 1.25; transform: rotate(-1.2deg); }
+.float.off .halo { display: none; }
+.float.off img { filter: brightness(.55) saturate(.6); }
+.float.off .name { background: var(--night-2); color: var(--paper-2); border-color: #333a5e; }
+@keyframes drift { 0%, 100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-14px) rotate(1deg); } }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .to-board, .float, .float .halo { animation: none; }
+}
+
 /* The two girls stand in the bottom-left corner above the darkness, so they are lit from the first visit. */
 .friends { position: absolute; z-index: 2; left: 1.6cqw; bottom: 1.2cqw; width: 15.5cqw; height: 17cqw; pointer-events: none; }
 .friends::before { content: ""; position: absolute; inset: -18% -30% -10%; border-radius: 50%; background: radial-gradient(closest-side, rgba(240, 178, 60, .26), rgba(240, 178, 60, .08) 60%, rgba(240, 178, 60, 0)); }
@@ -238,6 +266,17 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
         </div>
       </div>
     </div>
+    <a class="to-board" href="#board">
+      <span>גללו למסך ההחלטות של אור</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
+    </a>
+  </section>
+
+  <section class="decisions" id="board" aria-labelledby="boardTitle">
+    <h2 id="boardTitle">ההחלטות של אור</h2>
+    <p class="board-sub" id="boardSub"></p>
+    <div class="sky" id="sky"></div>
+    <p class="board-empty" id="boardEmpty" hidden></p>
   </section>
 
   <dialog id="dlg" aria-labelledby="dWord">
@@ -483,7 +522,62 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
   if (CLASSES.some(function (c) { return c.id === remembered; })) { classId = remembered; cls.value = remembered; }
   cls.addEventListener('change', function () { choose(cls.value); });
 
-  layout(); apply(readLocal(), true); send(); pull(true);
+  // Decisions board. A class joins once it has written any decision; its lantern shows only the decision of the current date and stays dark until that one is written.
+  var sky = document.getElementById('sky'), boardSub = document.getElementById('boardSub'), boardEmpty = document.getElementById('boardEmpty'), boardSig = '';
+  function boardDay() { var t = today(), k = -1; DAYS.forEach(function (d, i) { if (t >= d.opens) k = i; }); return k; }
+  function classState(id) { if (mem[id]) return mem[id]; try { return JSON.parse(local('kislev-' + id) || 'null'); } catch (e) { return null; } }
+  function esc(t) { return t.replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  // The decision is set on arcs around the lantern: lines over the top read from the outside in, lines under it read upright from the inside out.
+  function ringSvg(id, text) {
+    var SETS = [[['t', 147]], [['t', 147], ['b', 147]], [['t', 168], ['t', 147], ['b', 147]], [['t', 168], ['t', 147], ['b', 147], ['b', 168]], [['t', 168], ['t', 147], ['t', 126], ['b', 126], ['b', 147], ['b', 168]]];
+    var n = text.length, set, fs, cap, j;
+    for (j = 0; j < SETS.length; j++) {
+      set = SETS[j]; cap = 0; set.forEach(function (a) { cap += Math.PI * a[1] * .82; });
+      fs = Math.min(20, cap / (n * .5));
+      if (fs >= 12) break;
+    }
+    fs = Math.max(fs, 9);
+    var lines = [], rest = text;
+    set.forEach(function (a, i) {
+      if (i === set.length - 1) { lines.push(rest); return; }
+      var left = 0; set.slice(i).forEach(function (b) { left += b[1]; });
+      var want = Math.round(rest.length * a[1] / left), cut = rest.lastIndexOf(' ', want + 4);
+      if (cut <= 0) cut = rest.indexOf(' ', want); if (cut <= 0) cut = want;
+      lines.push(rest.slice(0, cut).trim()); rest = rest.slice(cut).trim();
+    });
+    var s = '<svg class="ring" viewBox="0 0 380 380" aria-hidden="true"><defs>', body = '';
+    set.forEach(function (a, i) {
+      if (!lines[i]) return;
+      var r = a[0] === 't' ? a[1] : a[1] + fs * .72, d = a[0] === 't' ? 'M' + (190 - r) + ',190 a' + r + ',' + r + ' 0 0,1 ' + 2 * r + ',0' : 'M' + (190 - r) + ',190 a' + r + ',' + r + ' 0 0,0 ' + 2 * r + ',0';
+      s += '<path id="' + id + '-' + i + '" d="' + d + '"/>';
+      body += '<text font-size="' + fs.toFixed(1) + '" direction="rtl"><textPath href="#' + id + '-' + i + '" startOffset="50%" text-anchor="middle">' + esc(lines[i]) + '</textPath></text>';
+    });
+    return s + '</defs>' + body + '</svg>';
+  }
+  function renderBoard() {
+    var k = boardDay(), rows = [];
+    CLASSES.forEach(function (c) {
+      var st = classState(c.id), notes = (st && st.notes) || [];
+      if (!notes.some(function (t) { return t && t.trim(); })) return;
+      rows.push({ c: c, note: k >= 0 ? (notes[k] || '').trim() : '' });
+    });
+    var sig = k + JSON.stringify(rows.map(function (r) { return [r.c.id, r.note]; }));
+    if (sig === boardSig) return; boardSig = sig;
+    boardSub.textContent = k >= 0 ? DAYS[k].word + ', ' + DAYS[k].date + ': כל כיתה שכותבת את ההחלטה הטובה של היום מדליקה את העששית שלה' : '';
+    boardEmpty.hidden = rows.length > 0;
+    boardEmpty.textContent = 'עוד אין החלטות. העששית הראשונה תצטרף כשכיתה תכתוב החלטה טובה.';
+    sky.textContent = '';
+    rows.forEach(function (r, i) {
+      var f = document.createElement('figure'); f.className = 'float' + (r.note ? '' : ' off');
+      f.style.setProperty('--t', (6 + (i * 37 % 5) * .7).toFixed(1) + 's'); f.style.setProperty('--d', (-(i * 53 % 7)).toFixed(1) + 's');
+      f.innerHTML = (r.note ? ringSvg('ring-' + r.c.id, r.note) + '<span class="halo"></span>' : '') + '<img src="assets/' + (r.note ? 'lantern-on' : 'lantern-off') + '.png" alt=""><figcaption class="name">' + esc(r.c.name) + '</figcaption>';
+      f.setAttribute('aria-label', r.c.name + (r.note ? ': ' + r.note : ', עוד לא כתבה החלטה להיום'));
+      sky.appendChild(f);
+    });
+  }
+  setInterval(renderBoard, 3000);
+
+  layout(); apply(readLocal(), true); renderBoard(); send(); pull(true);
   var rt; new ResizeObserver(function () { clearTimeout(rt); rt = setTimeout(layout, 120); }).observe(stage);
   setInterval(function () { if (!document.hidden) pull(); }, 60000);
   document.addEventListener('visibilitychange', function () { if (!document.hidden) pull(); });

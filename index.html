@@ -40,6 +40,15 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .stage > img, #dark { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 #dark { pointer-events: none; z-index: 1; }
 
+/* The two girls stand in the bottom-left corner above the darkness, so they are lit from the first visit. */
+.friends { position: absolute; z-index: 2; left: 1.6cqw; bottom: 1.2cqw; width: 15.5cqw; height: 17cqw; pointer-events: none; }
+.friends::before { content: ""; position: absolute; inset: -18% -30% -10%; border-radius: 50%; background: radial-gradient(closest-side, rgba(240, 178, 60, .26), rgba(240, 178, 60, .08) 60%, rgba(240, 178, 60, 0)); }
+.friends img { position: absolute; bottom: 0; height: 100%; width: auto; filter: drop-shadow(0 .4cqw .6cqw rgba(0, 0, 0, .45)); }
+.friends .girl-2 { left: 0; }
+.friends .girl-1 { right: 0; }
+.hand-glow { position: absolute; z-index: 1; left: -2.6cqw; top: 3.6cqw; width: 7.2cqw; height: 7.2cqw; border-radius: 50%; background: radial-gradient(closest-side, rgba(240, 178, 60, .55), rgba(240, 178, 60, 0)); animation: flicker 2.3s ease-in-out infinite; }
+.friends .girl-2 { z-index: 2; }
+
 .masthead { position: absolute; z-index: 5; top: 1.6cqw; right: 2cqw; width: 57cqw; pointer-events: none; text-align: center; display: grid; gap: .5cqw; }
 .eyebrow { margin: 0; color: var(--dim); font-size: max(14px, 1.2cqw); font-weight: 600; }
 .phrase { position: relative; margin: 0; aspect-ratio: 1600 / 257; }
@@ -193,7 +202,7 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
   .type, .rules { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .glow, .lantern.lit .glow, dialog[open] .book { animation: none; }
+  .glow, .lantern.lit .glow, .hand-glow, dialog[open] .book { animation: none; }
   .lamp, .lamp img, .phrase span { transition: none; }
 }
 </style>
@@ -221,6 +230,11 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
         <img src="assets/background.jpg" alt="נוף נייר בלילה: שביל עולה מ־770 והרוקדים, דרך ספר מאמרי אדמו״ר האמצעי והחופה, אל דיוקן אדמו״ר הזקן והכרכרה.">
         <img id="dayBg" src="assets/background-day.jpg" alt="" style="opacity:0">
         <canvas id="dark" aria-hidden="true"></canvas>
+        <div class="friends" aria-hidden="true">
+          <span class="hand-glow"></span>
+          <img class="girl-2" src="assets/girl-2-lantern.webp" alt="">
+          <img class="girl-1" src="assets/girl-1.webp" alt="">
+        </div>
       </div>
     </div>
   </section>

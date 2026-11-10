@@ -28,6 +28,7 @@
   --body: "Assistant", "Arial Hebrew", Arial, sans-serif;
 }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { background: var(--night); }
 body { background: var(--night); color: var(--paper); font-family: var(--body); font-size: 18px; line-height: 1.6; }
 button { font: inherit; color: inherit; cursor: pointer; }
@@ -253,13 +254,6 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
       <div class="page">
         <h3>התוכנית להיום</h3>
         <p id="dProgram"></p>
-        <p class="note" id="dSample">דוגמה למבנה בלבד. התוכן האמיתי ייכנס בהמשך.</p>
-        <ol class="steps" id="dSteps">
-          <li><time>5 דקות</time><span>פתיחה: צפייה בסרטון מול הכיתה</span></li>
-          <li><time>10 דקות</time><span>סיפור ושיחה</span></li>
-          <li><time>20 דקות</time><span>פעילות בכיתה</span></li>
-          <li><time>5 דקות</time><span>סיכום והדלקת העששית יחד</span></li>
-        </ol>
         <div class="added">
           <h3>הוספנו באור</h3>
           <label for="dNote">ההחלטה הטובה של הכיתה להיום</label>
@@ -399,7 +393,6 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
     document.getElementById('dWord').textContent = d.word;
     var about = document.getElementById('dAbout'); about.textContent = d.about; about.hidden = !d.about;
     var prog = document.getElementById('dProgram'); prog.textContent = d.program || ''; prog.hidden = !d.program;
-    document.getElementById('dSample').hidden = !!d.program; document.getElementById('dSteps').hidden = !!d.program;
     var slot = document.getElementById('dSlot'); slot.textContent = '';
     if (d.video) {
       var v = document.createElement('video'); v.controls = true; v.preload = 'metadata'; v.playsInline = true; v.src = d.video; v.poster = d.poster;

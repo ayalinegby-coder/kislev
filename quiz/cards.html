@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>כרטיסי חידון</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&family=Frank+Ruhl+Libre:wght@900&display=swap">
+<style>
+  :root { --ink: #111; --dim: #777; --line: #bbb; --paper: #fff; }
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #e9e6df; font-family: "Assistant", Arial, sans-serif; color: var(--ink); }
+  .bar { position: sticky; top: 0; background: #1c234b; color: #f1e6cf; padding: 12px 16px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; z-index: 2; }
+  .bar b { font-family: "Frank Ruhl Libre", serif; font-size: 20px; }
+  .bar label { display: flex; gap: 6px; align-items: center; }
+  .bar input { width: 64px; font: inherit; padding: 4px 6px; }
+  .bar button { font: inherit; font-weight: 700; padding: 6px 16px; border-radius: 999px; border: 0; background: #f0b23c; color: #1c234b; cursor: pointer; }
+  .sheet { width: 210mm; height: 297mm; margin: 12px auto; background: var(--paper); display: grid; grid-template-rows: 1fr 1fr; page-break-after: always; break-after: page; overflow: hidden; }
+  .card { position: relative; display: flex; align-items: center; justify-content: center; border-bottom: 1px dashed var(--line); }
+  .card:last-child { border-bottom: 0; }
+  .card svg.mark { width: 104mm; height: 104mm; display: block; }
+  .card .lt { position: absolute; font-weight: 700; font-size: 15pt; color: var(--dim); }
+  .card .num { position: absolute; top: 9mm; right: 12mm; font-weight: 700; font-size: 13pt; }
+  .card .name { position: absolute; bottom: 9mm; right: 12mm; font-size: 10pt; color: var(--dim); }
+  .card .hint { position: absolute; top: 9mm; left: 12mm; font-size: 9pt; color: var(--dim); }
+  @media print {
+    .bar { display: none; }
+    html, body { background: #fff; }
+    .sheet { margin: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="bar">
+  <b>כרטיסי חידון</b>
+  <label>מכרטיס <input id="from" type="number" min="1" max="40" value="1"></label>
+  <label>עד <input id="to" type="number" min="1" max="40" value="40"></label>
+  <button id="print">הדפסה</button>
+  <span>שני כרטיסים בעמוד A4. גוזרים לאורך הקו המקווקו.</span>
+</div>
+<div id="pages"></div>
+<script src="lib/cv.js"></script>
+<script src="lib/aruco.js"></script>
+<script src="lib/cards-dict.js"></script>
+<script>
+  // Card N uses dictionary id N-1. Side letters: top א, right ב, bottom ג, left ד (the letter that faces up is the answer).
+  var dict = new AR.Dictionary('KISLEV40');
+  function markSVG(id) {
+    var code = dict.codeList[id], s = '';
+    // 4x4 data + black border = 6 cells; white quiet zone is the card itself
+    s += '<rect x="0" y="0" width="6" height="6" fill="#000"/>';
+    for (var y = 0; y < 4; y++) for (var x = 0; x < 4; x++)
+      if (code[y * 4 + x] === '1') s += '<rect x="' + (x + 1) + '" y="' + (y + 1) + '" width="1.02" height="1.02" fill="#fff"/>';
+    return '<svg class="mark" viewBox="0 0 6 6" shape-rendering="crispEdges">' + s + '</svg>';
+  }
+  function card(n) {
+    // mark is 104mm, centred in a 210x148.5mm half page; letters sit 7mm outside the mark
+    var cx = 105, cy = 74.25, h = 52 + 7;
+    var L = function (ch, x, y, deg) {
+      return '<span class="lt" style="left:' + x + 'mm;top:' + y + 'mm;transform:translate(-50%,-50%) rotate(' + deg + 'deg)">' + ch + '</span>';
+    };
+    return '<div class="card">' + markSVG(n - 1) +
+      L('א', cx, cy - h, 0) + L('ב', cx + h, cy, 90) + L('ג', cx, cy + h, 180) + L('ד', cx - h, cy, -90) +
+      '<span class="num">' + n + '</span>' +
+      '<span class="hint">האות שלמעלה היא התשובה</span>' +
+      '<span class="name">שם: _______________</span></div>';
+  }
+  function build() {
+    var a = Math.max(1, Math.min(40, +document.getElementById('from').value || 1));
+    var b = Math.max(a, Math.min(40, +document.getElementById('to').value || 40));
+    var html = '';
+    for (var n = a; n <= b; n += 2)
+      html += '<div class="sheet">' + card(n) + (n + 1 <= b ? card(n + 1) : '<div class="card"></div>') + '</div>';
+    document.getElementById('pages').innerHTML = html;
+  }
+  document.getElementById('from').oninput = document.getElementById('to').oninput = build;
+  document.getElementById('print').onclick = function () { window.print(); };
+  build();
+</script>
+</body>
+</html>

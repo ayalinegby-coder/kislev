@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>חידון חתונת הרבי</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Frank+Ruhl+Libre:wght@900&display=swap">
+<style>
+  :root {
+    --night: #0a0c18; --felt: #1c234b; --flame: #f0b23c; --gold: #c9973f;
+    --paper: #f1e6cf; --ink: #2a2433; --line: #59608a; --dim: #8a8fb0;
+    --ok: #7fbf7a; --bad: #d9785f;
+    --display: "Frank Ruhl Libre", "David Libre", Georgia, serif;
+    --body: "Assistant", "Arial Hebrew", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    background: radial-gradient(ellipse at 50% -10%, #2a3268 0%, var(--felt) 35%, var(--night) 100%) fixed;
+    color: var(--paper); font-family: var(--body); font-size: 18px; line-height: 1.5;
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 24px 16px 40px; }
+  h1, h2 { font-family: var(--display); font-weight: 900; line-height: 1.2; margin: 0 0 8px; }
+  h1 { font-size: clamp(30px, 7vw, 46px); color: var(--flame); text-shadow: 0 0 24px rgba(240,178,60,.35); }
+  h2 { font-size: clamp(24px, 5.5vw, 34px); }
+  p.sub { color: var(--dim); margin: 0 0 24px; }
+  .panel { background: rgba(10,12,24,.55); border: 1px solid var(--line); border-radius: 18px; padding: 20px; }
+  label.f { display: block; font-weight: 700; margin-bottom: 8px; }
+  select {
+    width: 100%; font: inherit; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line);
+    background: var(--night); color: var(--paper); appearance: none;
+  }
+  .btns { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+  button.b {
+    font: inherit; font-weight: 700; border-radius: 999px; padding: 12px 22px; cursor: pointer;
+    border: 1px solid var(--gold); background: transparent; color: var(--paper);
+  }
+  button.b.main { background: var(--flame); border-color: var(--flame); color: var(--felt); }
+  button.b.small { padding: 6px 14px; font-size: 15px; font-weight: 600; border-color: var(--line); color: var(--dim); }
+  button.b:disabled { opacity: .4; cursor: default; }
+  a { color: var(--flame); }
+  .meta { display: flex; justify-content: space-between; color: var(--dim); font-size: 15px; margin-bottom: 10px; gap: 8px; }
+  .dots { display: flex; gap: 6px; }
+  .dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--flame); box-shadow: 0 0 8px var(--flame); }
+  .opts { display: grid; gap: 10px; margin-top: 18px; }
+  .opt { display: flex; gap: 14px; align-items: center; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--line); background: rgba(28,35,75,.6); }
+  .opt .l { flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-family: var(--display); font-weight: 900; font-size: 22px; background: var(--paper); color: var(--felt); }
+  .opt.right { border-color: var(--ok); box-shadow: 0 0 0 2px var(--ok) inset; }
+  .opt .bar { height: 8px; border-radius: 4px; background: var(--line); margin-top: 6px; overflow: hidden; }
+  .opt .bar span { display: block; height: 100%; background: var(--flame); }
+  .opt.right .bar span { background: var(--ok); }
+  .opt .t { flex: 1; }
+  .opt .n { flex: none; font-weight: 700; min-width: 2.5em; text-align: left; }
+  .note { color: var(--dim); font-size: 15px; margin-top: 12px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .chips span { min-width: 34px; text-align: center; padding: 2px 8px; border-radius: 999px; font-weight: 700; font-size: 15px; background: rgba(241,230,207,.12); }
+  .chips span.ok { background: rgba(127,191,122,.25); }
+  .chips span.bad { background: rgba(217,120,95,.25); }
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 16px; }
+  td, th { padding: 6px 8px; border-bottom: 1px solid rgba(89,96,138,.5); text-align: right; }
+  th { color: var(--dim); font-weight: 600; }
+
+  /* scanner */
+  #scan { position: fixed; inset: 0; background: #000; z-index: 10; display: flex; flex-direction: column; }
+  #scan .stage { position: relative; flex: 1; overflow: hidden; }
+  #scan video, #scan canvas.ov { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #scan .top, #scan .bottom { position: relative; z-index: 2; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; background: rgba(10,12,24,.85); }
+  #scan .top { padding-top: max(12px, env(safe-area-inset-top)); }
+  #scan .bottom { padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+  #scan .count { font-family: var(--display); font-weight: 900; font-size: 28px; color: var(--flame); }
+  #scan .seen { display: flex; flex-wrap: wrap; gap: 4px; max-height: 64px; overflow: auto; }
+  #scan .seen span { font-size: 13px; font-weight: 700; padding: 0 6px; border-radius: 6px; background: rgba(240,178,60,.25); }
+  #scan .err { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; text-align: center; color: var(--paper); z-index: 3; }
+</style>
+</head>
+<body>
+<main>
+  <!-- בית -->
+  <section id="home">
+    <h1>חידון: חתונת הרבי</h1>
+    <p class="sub">שאלות על הסיפור של אברמ׳ל ובער׳ל. התלמידות מרימות כרטיס, ואת סורקת מהטלפון.</p>
+    <div class="panel">
+      <label class="f" for="cls">הכיתה שלי</label>
+      <select id="cls"><option value="">בחרי כיתה…</option></select>
+      <div class="btns">
+        <button class="b main" id="start" disabled>מתחילות</button>
+        <button class="b" id="resume" hidden></button>
+      </div>
+      <p class="note">כל כיתה משחקת בנפרד, וההתקדמות נשמרת בטלפון הזה. <a href="cards.html" target="_blank">להדפסת הכרטיסים</a></p>
+    </div>
+  </section>
+
+  <!-- שאלה ותוצאות -->
+  <section id="q" hidden>
+    <div class="meta"><span id="qClass"></span><span id="qNum"></span></div>
+    <div class="dots" id="dots"></div>
+    <div class="panel" style="margin-top:14px">
+      <h2 id="qText"></h2>
+      <div class="opts" id="opts"></div>
+      <div id="who" hidden></div>
+      <div class="btns" id="qBtns">
+        <button class="b main" id="scanBtn">סריקת תשובות</button>
+        <button class="b" id="revealBtn">הצגת התוצאות</button>
+      </div>
+      <div class="btns" id="rBtns" hidden>
+        <button class="b main" id="nextBtn">לשאלה הבאה</button>
+        <button class="b" id="rescanBtn">לסרוק שוב</button>
+      </div>
+    </div>
+    <div class="btns"><button class="b small" id="homeBtn">חזרה למסך הכיתות</button></div>
+  </section>
+
+  <!-- סיכום -->
+  <section id="sum" hidden>
+    <h1>כל הכבוד!</h1>
+    <p class="sub" id="sumSub"></p>
+    <div class="panel"><h2 style="font-size:24px">לפי שאלה</h2><table id="perQ"></table></div>
+    <div class="panel" style="margin-top:14px"><h2 style="font-size:24px">לפי כרטיס</h2><table id="perCard"></table></div>
+    <div class="btns">
+      <button class="b" id="sumHome">חזרה למסך הכיתות</button>
+      <button class="b small" id="sumReset">משחק חדש לכיתה</button>
+    </div>
+  </section>
+</main>
+
+<!-- סורק -->
+<div id="scan" hidden>
+  <div class="top"><div><div class="count" id="count">0</div><div style="font-size:14px;color:var(--dim)">כרטיסים נקלטו</div></div><div class="seen" id="seen"></div></div>
+  <div class="stage">
+    <video id="vid" playsinline muted autoplay></video>
+    <canvas class="ov" id="ov"></canvas>
+    <div class="err" id="camErr" hidden></div>
+  </div>
+  <div class="bottom">
+    <span style="font-size:15px;color:var(--dim)">כווני את המצלמה לכיתה ועברי לאט על כל השורות</span>
+    <button class="b main" id="doneBtn">סיום</button>
+  </div>
+</div>
+
+<script src="lib/cv.js"></script>
+<script src="lib/aruco.js"></script>
+<script src="lib/cards-dict.js"></script>
+<script>
+(function () {
+  // ===== השאלות (אושרו 16.11.2026). answer = האות הנכונה =====
+  var QUIZ = [
+    { q: 'לאיזו עיר נסעו אברמ׳ל ובער׳ל לחתונת בת הרבי?',
+      o: ['ורשה', 'ליובאוויטש', 'ריגה', 'מוסקבה'], answer: 'א' },
+    { q: 'למה התאספו כל כך הרבה אנשים בתחנת הרכבת?',
+      o: ['כדי לקבל את פני אברמ׳ל ובער׳ל', 'כי הרבי הריי״צ, אבי הכלה, הגיע ברכבת', 'כי הרכבת התעכבה', 'כדי לקנות כרטיסים לחתונה'], answer: 'ב' },
+    { q: 'מה עשה אברמ׳ל בלילה שלפני החתונה, כשאמא ביקשה שילך לישון?',
+      o: ['נרדם מיד', 'כתב מכתב לחברים בחיידר', 'התחמק החוצה בפיג׳מה כדי להציץ מהחלון', 'עזר לסדר את האולם'], answer: 'ג' },
+    { q: 'מה ראה אברמ׳ל דרך החלון?',
+      o: ['את החתן מתכונן לחופה', 'את הרבי הריי״צ מברך את ברכות החופה', 'את אמא שלו מחפשת אותו', 'את התמימים רוקדים במעגל והרבי הריי״צ באמצע'], answer: 'ד' },
+    { q: 'איך הצליחו האחים לראות את החופה מתוך אלפי האנשים?',
+      o: ['עמדו על מרפסת גבוהה', 'עמדו על לבנים ליד החלון', 'הגיעו ראשונים ועמדו ליד החופה', 'טיפסו על עץ'], answer: 'א' },
+    { q: 'למה הורי החתן לא הגיעו לחתונה?',
+      o: ['הם היו חולים', 'הם היו מאחורי ״מסך הברזל״ ולא יכלו לצאת מרוסיה', 'הרכבת שלהם התעכבה', 'הם לא ידעו על החתונה'], answer: 'ב' },
+    { q: 'לפי בער׳ל, מה מיוחד ביום י״ד כסלו?',
+      o: ['זה היום שבו נולד הרבי', 'זה היום שבו חזרו הביתה', 'זה היום שבו נעשינו כולנו קשורים לחתן, הרבי', 'זה היום שבו הרבי הגיע לוורשה'], answer: 'ג' }
+  ];
+  var L = ['א', 'ב', 'ג', 'ד'];
+  var CLASSES = [
+    ['a1', 'כיתה א1'], ['a2', 'כיתה א2'], ['a3', 'כיתה א3'], ['debbie', 'הכיתה של המורה דבי'],
+    ['b1', 'כיתה ב1'], ['b2', 'כיתה ב2'], ['b3', 'כיתה ב3'], ['b4', 'כיתה ב4'],
+    ['g1', 'כיתה ג1'], ['g2', 'כיתה ג2'], ['g3', 'כיתה ג3'],
+    ['d1', 'כיתה ד1'], ['d2', 'כיתה ד2'], ['d3', 'כיתה ד3'], ['d4', 'כיתה ד4'],
+    ['h1', 'כיתה ה1'], ['h2', 'כיתה ה2'], ['h3', 'כיתה ה3'],
+    ['v1', 'כיתה ו1'], ['v2', 'כיתה ו2'], ['v3', 'כיתה ו3'], ['v4', 'כיתה ו4']
+  ];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var cls = null, st = null; // st = { i: question index, a: [ {card: letter} per question ], shown: [bool] }
+
+  // ===== שמירה בטלפון =====
+  function key(c) { return 'kislev-quiz-' + c; }
+  function load(c) {
+    try { var s = JSON.parse(localStorage.getItem(key(c))); if (s && s.a) return s; } catch (e) {}
+    return { i: 0, a: QUIZ.map(function () { return {}; }), shown: QUIZ.map(function () { return false; }) };
+  }
+  function save() { try { localStorage.setItem(key(cls), JSON.stringify(st)); } catch (e) {} }
+  function clsName(c) { for (var i = 0; i < CLASSES.length; i++) if (CLASSES[i][0] === c) return CLASSES[i][1]; return ''; }
+
+  function show(id) { ['home', 'q', 'sum'].forEach(function (s) { $(s).hidden = s !== id; }); window.scrollTo(0, 0); }
+
+  // ===== מסך בית =====
+  CLASSES.forEach(function (c) { var o = document.createElement('option'); o.value = c[0]; o.textContent = c[1]; $('cls').appendChild(o); });
+  try { var last = localStorage.getItem('kislev-quiz-last'); if (last) $('cls').value = last; } catch (e) {}
+  function homeRefresh() {
+    var c = $('cls').value; $('start').disabled = !c; $('resume').hidden = true;
+    if (!c) return;
+    var s = load(c), any = s.a.some(function (x) { return Object.keys(x).length; });
+    $('start').textContent = any ? 'משחק חדש' : 'מתחילות';
+    if (any) { $('resume').hidden = false; $('resume').textContent = s.i >= QUIZ.length ? 'לסיכום של הכיתה' : 'להמשיך משאלה ' + (s.i + 1); }
+  }
+  $('cls').onchange = homeRefresh; homeRefresh();
+  function enter(fresh) {
+    cls = $('cls').value; try { localStorage.setItem('kislev-quiz-last', cls); } catch (e) {}
+    if (fresh) { try { localStorage.removeItem(key(cls)); } catch (e) {} }
+    st = load(cls);
+    if (st.i >= QUIZ.length) renderSum(); else renderQ();
+  }
+  $('start').onclick = function () {
+    if ($('start').textContent === 'משחק חדש' && !confirm('להתחיל משחק חדש? התשובות הקודמות של הכיתה יימחקו.')) return;
+    enter(true);
+  };
+  $('resume').onclick = function () { enter(false); };
+  $('homeBtn').onclick = $('sumHome').onclick = function () { homeRefresh(); show('home'); };
+  $('sumReset').onclick = function () { if (confirm('להתחיל משחק חדש לכיתה?')) { enter(true); } };
+
+  // ===== שאלה =====
+  function renderQ() {
+    var Q = QUIZ[st.i], ans = st.a[st.i], n = Object.keys(ans).length, shown = st.shown[st.i];
+    $('qClass').textContent = clsName(cls);
+    $('qNum').textContent = 'שאלה ' + (st.i + 1) + ' מתוך ' + QUIZ.length;
+    $('dots').innerHTML = QUIZ.map(function (_, k) { return '<i class="' + (k <= st.i ? 'on' : '') + '"></i>'; }).join('');
+    $('qText').textContent = Q.q;
+    var counts = { 'א': 0, 'ב': 0, 'ג': 0, 'ד': 0 };
+    Object.keys(ans).forEach(function (c) { counts[ans[c]]++; });
+    $('opts').innerHTML = Q.o.map(function (t, k) {
+      var l = L[k], right = shown && l === Q.answer, pct = n ? Math.round(counts[l] * 100 / n) : 0;
+      return '<div class="opt' + (right ? ' right' : '') + '"><span class="l">' + l + '</span><div class="t">' + esc(t) +
+        (shown ? '<div class="bar"><span style="width:' + pct + '%"></span></div>' : '') + '</div>' +
+        (shown ? '<span class="n">' + counts[l] + '</span>' : '') + '</div>';
+    }).join('');
+    $('scanBtn').textContent = n ? 'להמשיך לסרוק (' + n + ' נקלטו)' : 'סריקת תשובות';
+    $('qBtns').hidden = shown; $('rBtns').hidden = !shown;
+    $('nextBtn').textContent = st.i === QUIZ.length - 1 ? 'לסיכום' : 'לשאלה הבאה';
+    if (shown) {
+      var ok = [], bad = [];
+      Object.keys(ans).map(Number).sort(function (a, b) { return a - b; }).forEach(function (c) { (ans[c] === Q.answer ? ok : bad).push(c); });
+      $('who').hidden = false;
+      $('who').innerHTML = '<p class="note">ענו ' + n + ' · נכון ' + ok.length + '. מספרי הכרטיסים:</p><div class="chips">' +
+        ok.map(function (c) { return '<span class="ok">' + c + '</span>'; }).join('') +
+        bad.map(function (c) { return '<span class="bad">' + c + '</span>'; }).join('') + '</div>';
+    } else $('who').hidden = true;
+    show('q');
+  }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  $('revealBtn').onclick = function () { st.shown[st.i] = true; save(); renderQ(); };
+  $('rescanBtn').onclick = function () { st.shown[st.i] = false; save(); openScan(); };
+  $('nextBtn').onclick = function () { st.i++; save(); if (st.i >= QUIZ.length) renderSum(); else renderQ(); };
+  $('scanBtn').onclick = openScan;
+
+  // ===== סיכום =====
+  function renderSum() {
+    var cards = {};
+    var rows = QUIZ.map(function (Q, k) {
+      var ans = st.a[k], ids = Object.keys(ans), ok = ids.filter(function (c) { return ans[c] === Q.answer; }).length;
+      ids.forEach(function (c) { cards[c] = cards[c] || { ok: 0, n: 0 }; cards[c].n++; if (ans[c] === Q.answer) cards[c].ok++; });
+      return '<tr><td>' + (k + 1) + '. ' + esc(Q.q) + '</td><td>' + (ids.length ? Math.round(ok * 100 / ids.length) + '%' : '–') + '</td></tr>';
+    });
+    $('perQ').innerHTML = '<tr><th>שאלה</th><th>ענו נכון</th></tr>' + rows.join('');
+    var ids = Object.keys(cards).map(Number).sort(function (a, b) { return a - b; });
+    $('perCard').innerHTML = '<tr><th>כרטיס</th><th>תשובות נכונות</th></tr>' + ids.map(function (c) {
+      return '<tr><td>' + c + '</td><td>' + cards[c].ok + ' מתוך ' + QUIZ.length + '</td></tr>';
+    }).join('');
+    $('sumSub').textContent = clsName(cls) + ' · ' + ids.length + ' כרטיסים השתתפו';
+    show('sum');
+  }
+
+  // ===== סורק =====
+  var det = new AR.Detector({ dictionaryName: 'KISLEV40' });
+  var stream = null, running = false, work = document.createElement('canvas'), wctx = work.getContext('2d', { willReadFrequently: true });
+  var pending = {}; // card -> {l, n} : needs 2 matching reads in a row before it counts
+  function sideUp(m) {
+    var c = m.corners, a = Math.atan2(c[1].y - c[0].y, c[1].x - c[0].x) * 180 / Math.PI;
+    if (a > -45 && a <= 45) return 'א';
+    if (a > -135 && a <= -45) return 'ב';
+    if (a > 45 && a <= 135) return 'ד';
+    return 'ג';
+  }
+  function scanCount() {
+    var ans = st.a[st.i], ids = Object.keys(ans).map(Number).sort(function (a, b) { return a - b; });
+    $('count').textContent = ids.length;
+    $('seen').innerHTML = ids.map(function (c) { return '<span>' + c + '</span>'; }).join('');
+  }
+  function openScan() {
+    $('scan').hidden = false; $('camErr').hidden = true; pending = {}; scanCount();
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return camFail();
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false })
+      .then(function (s) { stream = s; $('vid').srcObject = s; return $('vid').play(); })
+      .then(function () { running = true; requestAnimationFrame(tick); })
+      .catch(camFail);
+  }
+  function camFail() {
+    $('camErr').hidden = false;
+    $('camErr').innerHTML = '<div>לא הצלחתי לפתוח את המצלמה.<br>צריך לאשר לדפדפן גישה למצלמה ולנסות שוב.</div>';
+  }
+  function closeScan() {
+    running = false;
+    if (stream) stream.getTracks().forEach(function (t) { t.stop(); });
+    stream = null; $('scan').hidden = true; save(); renderQ();
+  }
+  $('doneBtn').onclick = closeScan;
+
+  var lastT = 0;
+  function tick(t) {
+    if (!running) return;
+    requestAnimationFrame(tick);
+    if (t - lastT < 90) return; lastT = t;
+    var v = $('vid'), vw = v.videoWidth, vh = v.videoHeight; if (!vw) return;
+    var sc = Math.min(1, 960 / Math.max(vw, vh)), w = Math.round(vw * sc), h = Math.round(vh * sc);
+    if (work.width !== w) { work.width = w; work.height = h; }
+    wctx.drawImage(v, 0, 0, w, h);
+    var ms = det.detect(wctx.getImageData(0, 0, w, h));
+    var ans = st.a[st.i], changed = false, seenNow = {};
+    ms.forEach(function (m) {
+      if (m.id >= 40) return;
+      var card = m.id + 1, l = sideUp(m), p = pending[card];
+      seenNow[card] = 1;
+      if (p && p.l === l) p.n++; else pending[card] = p = { l: l, n: 1 };
+      if (p.n >= 2 && ans[card] !== l) {
+        if (!(card in ans)) { try { navigator.vibrate && navigator.vibrate(15); } catch (e) {} }
+        ans[card] = l; changed = true;
+      }
+    });
+    Object.keys(pending).forEach(function (c) { if (!seenNow[c]) delete pending[c]; });
+    if (changed) { scanCount(); save(); }
+    draw(ms, w, h);
+  }
+  function draw(ms, w, h) {
+    var ov = $('ov'), r = ov.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+    if (ov.width !== Math.round(r.width * dpr)) { ov.width = Math.round(r.width * dpr); ov.height = Math.round(r.height * dpr); }
+    var g = ov.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, r.width, r.height);
+    // object-fit: cover mapping
+    var s = Math.max(r.width / w, r.height / h), ox = (r.width - w * s) / 2, oy = (r.height - h * s) / 2;
+    var ans = st.a[st.i];
+    ms.forEach(function (m) {
+      if (m.id >= 40) return;
+      var c = m.corners, card = m.id + 1, done = card in ans;
+      g.beginPath();
+      c.forEach(function (p, k) { var x = ox + p.x * s, y = oy + p.y * s; k ? g.lineTo(x, y) : g.moveTo(x, y); });
+      g.closePath(); g.lineWidth = 4; g.strokeStyle = done ? '#7fbf7a' : '#f0b23c'; g.stroke();
+      var cx = 0, cy = 0; c.forEach(function (p) { cx += p.x / 4; cy += p.y / 4; });
+      g.font = '700 18px Assistant, Arial'; g.textAlign = 'center'; g.textBaseline = 'middle';
+      g.fillStyle = 'rgba(10,12,24,.8)'; g.fillRect(ox + cx * s - 18, oy + cy * s - 13, 36, 26);
+      g.fillStyle = '#f1e6cf'; g.fillText(card, ox + cx * s, oy + cy * s);
+    });
+  }
+})();
+</script>
+</body>
+</html>

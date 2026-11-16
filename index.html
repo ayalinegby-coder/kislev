@@ -140,6 +140,8 @@ html { scroll-behavior: smooth; }
 .btn { border: 0; padding: 9px 20px 10px; font-weight: 700; background: var(--flame); color: var(--ink); box-shadow: 0 3px 0 #9a6a26; transition: transform .15s, box-shadow .15s; }
 .btn:hover { transform: translateY(1px); box-shadow: 0 2px 0 #9a6a26; }
 .btn:disabled { background: #d8cbae; color: #6d6252; box-shadow: none; cursor: default; transform: none; }
+a.btn { display: inline-block; text-decoration: none; }
+.quiz-row { margin: 4px 0 14px; }
 .btn.quiet { background: transparent; color: var(--paper-2); box-shadow: inset 0 0 0 1.5px var(--line); }
 .btn.quiet:hover { box-shadow: inset 0 0 0 1.5px var(--paper-2); }
 
@@ -294,6 +296,7 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
       <div class="page">
         <h3>התוכנית להיום</h3>
         <p id="dProgram"></p>
+        <p class="quiz-row" id="dQuiz" hidden><a class="btn" id="dQuizLink" href="quiz/" target="_blank" rel="noopener">לחידון הברקודים על הסיפור</a></p>
         <div class="added">
           <h3>הוספנו באור</h3>
           <label for="dNote">ההחלטה הטובה של הכיתה להיום</label>
@@ -326,7 +329,7 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
   var DAYS = [
     { word: 'אור וחיות', date: 'א׳ כסלו', about: '', program: 'לחיים לחיים!\nהיום הבהיר ראש חודש כסלו, בו הרבי יצא לחסידים לאחר תקופה ארוכה וקשה.\nנצפה יחד בסרטון על סיפור הנס,\nנחפש בדף שלנו איורים שנשמעים בסרטון ונסמן אותם אצלנו.\nבהצלחה!', video: 'assets/a-kislev.mp4', poster: 'assets/a-kislev-poster.jpg', song: 'assets/song-a.mp3', x: .876, y: .37, w: .06, light: [.876, .66, .19], opens: '2026-11-10', lights: '2026-11-11', opensText: 'יום שלישי, 10.11', lightsText: 'יום רביעי, 11.11' },
     { word: 'נפשנו', date: 'ט׳–י׳ כסלו', about: 'יום ההולדת ויום ההסתלקות של אדמו״ר האמצעי, ויום גאולתו ממאסר.', song: 'assets/song-b.mp3', x: .625, y: .30, w: .06, light: [.625, .55, .165], opens: '2026-11-18', lights: '2026-11-19', opensText: 'יום רביעי, 18.11', lightsText: 'יום חמישי, 19.11' },
-    { word: 'ניתן', date: 'י״ד כסלו', about: 'יום נישואי הרבי והרבנית.', song: 'assets/song-c.mp3', x: .365, y: .215, w: .06, light: [.365, .46, .165], opens: '2026-11-23', lights: '2026-11-24', opensText: 'יום שני, 23.11', lightsText: 'יום שלישי, 24.11' },
+    { word: 'ניתן', date: 'י״ד כסלו', about: 'יום נישואי הרבי והרבנית.', quiz: 'quiz/', song: 'assets/song-c.mp3', x: .365, y: .215, w: .06, light: [.365, .46, .165], opens: '2026-11-23', lights: '2026-11-24', opensText: 'יום שני, 23.11', lightsText: 'יום שלישי, 24.11' },
     { word: 'לנו', date: 'י״ט כסלו', about: 'ראש השנה לחסידות, יום גאולת אדמו״ר הזקן ממאסר. שבוע ההכנה מוביל אל היום הזה.', x: .245, y: .125, w: .071, light: [.165, .36, .2], opens: '2026-11-27', lights: '2026-11-29', opensText: 'יום שישי, 27.11', lightsText: 'יום ראשון, 29.11' }
   ];
   var stage = document.getElementById('stage'), dark = document.getElementById('dark'), dctx = dark.getContext('2d');
@@ -433,6 +436,7 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
     document.getElementById('dWord').textContent = d.word;
     var about = document.getElementById('dAbout'); about.textContent = d.about; about.hidden = !d.about;
     var prog = document.getElementById('dProgram'); prog.textContent = d.program || ''; prog.hidden = !d.program;
+    var qz = document.getElementById('dQuiz'); qz.hidden = !d.quiz; if (d.quiz) document.getElementById('dQuizLink').href = d.quiz;
     var slot = document.getElementById('dSlot'); slot.textContent = '';
     if (d.video) {
       var v = document.createElement('video'); v.controls = true; v.preload = 'metadata'; v.playsInline = true; v.src = d.video; v.poster = d.poster;

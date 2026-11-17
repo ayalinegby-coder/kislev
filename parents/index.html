@@ -2,26 +2,254 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>להורים · שבוע ההכנה לי״ט כסלו</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600&family=Frank+Ruhl+Libre:wght@900&display=swap">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Frank+Ruhl+Libre:wght@900&family=Gveret+Levin&display=swap">
 <style>
-:root { --night: #0a0c18; --flame: #f0b23c; --paper: #f1e6cf; --dim: #8a8fb0; }
+:root {
+  color-scheme: dark;
+  --night: #0a0c18;
+  --felt: #1c234b;
+  --moss-deep: #39534e;
+  --flame: #f0b23c;
+  --gold: #c9973f;
+  --paper: #f1e6cf;
+  --paper-2: #dfcfae;
+  --ink: #2a2433;
+  --line: #59608a;
+  --dim: #8a8fb0;
+  --display: "Frank Ruhl Libre", "David Libre", Georgia, serif;
+  --dw: 900;
+  --body: "Assistant", "Arial Hebrew", Arial, sans-serif;
+  --hand: "Gveret Levin", "Assistant", sans-serif;
+}
 * { box-sizing: border-box; }
-body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; text-align: center; background: radial-gradient(ellipse at 50% -10%, #232a57 0%, var(--night) 62%); color: var(--paper); font: 18px/1.6 "Assistant", Arial, sans-serif; }
-main { max-width: 460px; display: grid; gap: 14px; justify-items: center; }
-img { width: 80px; filter: drop-shadow(0 0 22px rgba(240, 178, 60, .8)); }
-h1 { margin: 0; font: 900 clamp(32px, 9vw, 48px)/1.1 "Frank Ruhl Libre", Georgia, serif; color: var(--flame); }
-p { margin: 0; }
-.small { color: var(--dim); font-size: 15px; }
+[hidden] { display: none !important; }
+html { background: var(--night); }
+body { margin: 0; min-height: 100vh; background: radial-gradient(ellipse at 50% -10%, #232a57 0%, var(--night) 62%) fixed; color: var(--paper); font-family: var(--body); font-size: 18px; line-height: 1.6; }
+button, input, textarea { font: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--flame); outline-offset: 3px; }
+main { max-width: 640px; margin: 0 auto; padding: 22px 16px 60px; display: grid; gap: 22px; }
+
+.head { text-align: center; display: grid; gap: 4px; justify-items: center; }
+.head img { width: 64px; filter: drop-shadow(0 0 20px rgba(240, 178, 60, .75)); }
+.head .eyebrow { margin: 0; color: var(--dim); font-weight: 600; font-size: .95rem; }
+.head h1 { margin: 0; font-family: var(--display); font-weight: var(--dw); font-size: clamp(32px, 8vw, 46px); line-height: 1.1; color: var(--flame); text-shadow: 0 0 18px rgba(240, 178, 60, .35); }
+.head p { margin: 0; color: var(--paper-2); }
+.who { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 4px 10px; color: var(--paper-2); font-size: .95rem; }
+.who b { color: var(--paper); }
+.link { background: none; border: 0; padding: 0; color: var(--flame); text-decoration: underline; text-underline-offset: 3px; font-size: .9rem; }
+
+.card { position: relative; background: var(--paper); color: var(--ink); padding: 24px 22px 26px; border-bottom: 10px solid var(--moss-deep); box-shadow: 0 2px 0 var(--paper-2), 0 5px 0 #cdbb97, 0 30px 70px rgba(0, 0, 0, .6); display: grid; gap: 16px; }
+.card h2 { margin: 0; font-family: var(--display); font-weight: var(--dw); font-size: 1.6rem; line-height: 1.2; color: var(--felt); }
+.card p { margin: 0; }
+label { display: grid; gap: 4px; font-weight: 600; }
+input, textarea { width: 100%; padding: 10px 12px; background: #fffaf0; color: var(--ink); border: 2px solid #d9c7a0; border-radius: 0; }
+input:focus, textarea:focus { border-color: var(--flame); outline: none; }
+.btn { justify-self: start; display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; background: var(--felt); color: var(--paper); border: 0; font-weight: 700; }
+.btn:hover { background: #2a3366; }
+.btn[disabled] { opacity: .6; cursor: default; }
+.msg { min-height: 1.4em; color: #9a3412; font-weight: 600; }
+
+.days { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 8px; scrollbar-width: thin; }
+.days button { flex: 0 0 auto; display: grid; justify-items: center; gap: 2px; width: 84px; padding: 8px 4px; background: rgba(21, 26, 54, .75); border: 1px solid #333a5e; color: var(--paper-2); }
+.days img { width: 46px; height: 42px; object-fit: contain; }
+.days b { font-family: var(--hand); font-weight: 400; font-size: 1.05rem; line-height: 1; color: var(--paper); }
+.days small { font-size: .78rem; }
+.days button[aria-current="true"] { border-color: var(--flame); box-shadow: inset 0 0 0 1px var(--flame); }
+.days button[aria-current="true"] small { color: var(--flame); }
+.days button[disabled] { opacity: .45; cursor: default; }
+.days button .tick { color: #7fc48a; font-weight: 700; }
+
+.day-top { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; }
+.day-top img { width: 84px; height: 78px; object-fit: contain; }
+.date { margin: 0; color: #8a4a1f; font-weight: 700; }
+.sec { display: grid; gap: 6px; }
+.sec h3 { margin: 0; font-family: var(--display); font-weight: var(--dw); font-size: 1.15rem; color: var(--moss-deep); }
+.quote { padding: 12px 14px; background: #fde9d2; border-inline-start: 4px solid #f0bf73; font-weight: 600; }
+.quote small { display: block; font-weight: 400; color: #6d6252; }
+.talk { padding: 12px 14px; background: #fff4d6; border-inline-start: 4px solid var(--flame); }
+.task { padding: 14px; background: #eef1fa; border-inline-start: 4px solid var(--felt); }
+.task ul { margin: 6px 0 0; padding-inline-start: 20px; }
+
+.report { display: grid; gap: 10px; padding-top: 6px; border-top: 2px dashed #d9c7a0; }
+.report h3 { margin: 0; font-family: var(--display); font-weight: var(--dw); font-size: 1.15rem; color: var(--felt); }
+.done { display: grid; gap: 6px; justify-items: center; text-align: center; padding: 16px; background: #edf6ee; border: 2px solid #9cc9a3; }
+.done strong { font-family: var(--display); font-weight: var(--dw); font-size: 1.3rem; color: #2f6b3a; }
+.soon { text-align: center; color: var(--paper-2); }
+footer { text-align: center; color: var(--dim); font-size: .85rem; }
 </style>
 </head>
 <body>
 <main>
-  <img src="../assets/lantern-on.png" alt="">
-  <h1>הורים יקרים</h1>
-  <p>כאן תוכלו לראות בכל יום מה למדנו בשבוע ההכנה לי״ט כסלו, ולדווח על ביצוע המשימה.</p>
-  <p class="small">העמוד ייפתח ביום ראשון, י״ב כסלו.</p>
+  <header class="head">
+    <img src="../assets/lantern-on.png" alt="">
+    <p class="eyebrow">אור וחיות נפשנו · שבוע ההכנה לי״ט כסלו</p>
+    <h1>הורים יקרים</h1>
+    <p id="intro">כאן רואים בכל יום מה הבנות למדו, ומדווחים על ביצוע המשימה.</p>
+    <div class="who" id="who" hidden><span>הורים של <b id="whoName"></b>, <span id="whoCls"></span></span><button class="link" id="switch" type="button">החלפת תלמידה</button></div>
+  </header>
+
+  <form class="card" id="login" hidden novalidate>
+    <h2>כניסה</h2>
+    <p>את קוד הכיתה קיבלתם מהמורה.</p>
+    <label>קוד הכיתה<input id="code" inputmode="numeric" autocomplete="off" maxlength="6" required></label>
+    <label>שם התלמידה<input id="name" autocomplete="given-name" maxlength="40" required></label>
+    <button class="btn" id="go" type="submit">כניסה</button>
+    <p class="msg" id="loginMsg" aria-live="polite"></p>
+  </form>
+
+  <section id="app" hidden>
+    <nav class="days" id="days" aria-label="ימי שבוע ההכנה"></nav>
+    <article class="card" id="day" aria-live="polite"></article>
+  </section>
+
+  <p class="soon" id="soon" hidden></p>
+  <footer>בית הספר · חודש כסלו</footer>
 </main>
+
+<script>
+(function () {
+  var API = 'https://script.google.com/macros/s/AKfycbzplu_IajxMGmVkBeDsCiWHjhclrpPZoe9m6ZpGVcA7hpEvWTlE050480mQy4OmHykV/exec';
+  var KEY = 'kislev-parent';
+  var DAYS = [
+    { date: '2026-11-22', day: 'יום ראשון', heb: 'י״ב כסלו', img: 'pop-1.webp', theme: 'מוח שליט על הלב',
+      quote: '״כי המוח שליט על הלב בתולדתו וטבע יצירתו... שכל אדם יכול ברצונו שבמוחו להתאפק ולמשול ברוח תאוותו שבלבו.״', source: 'תניא, פרק י״ב',
+      learn: 'הקב״ה ברא אותנו כך שהשכל חזק מהרגש. גם כשהלב רוצה לכעוס או להתעצל, כל אחת יכולה לעצור, לחשוב ולהחליט בעצמה מה לעשות.',
+      story: 'המרגל של אדמו״ר הזקן', storyText: 'רבי משה מייזליש ריגל במפקדת נפוליאון. נפוליאון הניח יד על ליבו, והלב פעם ברוגע. ״מוח שליט על הלב״ הציל את חייו.',
+      talk: 'ספרי לי על רגע שבו הלב רצה לכעוס, והשכל החליט אחרת.',
+      task: ['לרשום בחוברת משהו שיכול מאוד להכעיס אותי, ואיך התגברתי.'] },
+    { date: '2026-11-23', day: 'יום שני', heb: 'י״ג כסלו', img: 'pop-2.webp', theme: 'אהבת ישראל',
+      quote: '״הרי זו דרך ישרה וקלה לבוא לידי קיום מצות ׳ואהבת לרעך כמוך׳ לכל נפש מישראל, למגדול ועד קטן.״', source: 'תניא, פרק ל״ב',
+      learn: 'מבחוץ אנחנו שונות זו מזו, אבל כל הנשמות באות ממקום אחד, ״אחים ממש״. לכן אפשר לאהוב כל יהודי, גם מי שלא דומה לנו.',
+      story: 'אהבת ישראל בהידור', storyText: 'החסיד ר׳ ישראל לוין עזר בחום לאדם שכולם התרחקו ממנו. ״כשאוהבים יהודי רק מפני שהוא יהודי, זו אהבת ישראל בהידור.״',
+      talk: 'מי בכיתה הכי שונה ממך? מה טוב בה?',
+      task: ['לשים לב מי מהבנות לא הגיעה לכיתה, ולהתקשר להתעניין בשלומה.', 'להתנהג באהבת ישראל מיוחדת עם האחים בבית.'] },
+    { date: '2026-11-24', day: 'יום שלישי', heb: 'י״ד כסלו', img: 'pop-chuppah.webp', theme: 'היום שקישר אותנו',
+      quote: '״כי יניקת וחיות נפש רוח ונשמה של עמי הארץ הוא מנפש רוח ונשמה של הצדיקים והחכמים ראשי בני ישראל שבדורם.״', source: 'תניא, פרק ב׳',
+      learn: 'י״ד כסלו הוא יום חתונת הרבי והרבנית. הרבי אמר: ״זה היום שקישר אותי עם החסידים, ואת החסידים איתי״. מתחזקות בקשר לרבי בלימוד תורתו, בקיום הוראותיו ובמעשים טובים.',
+      story: 'שמחה בשני מקומות', storyText: 'הורי הרבי לא הורשו לצאת מרוסיה לחתונה בוורשה, ולכן ערכו חגיגה משלהם. באותו לילה נחגגה החתונה בשתי מדינות.',
+      talk: 'איזו הוראה של הרבי את הכי אוהבת לקיים?',
+      task: ['לתת מתנה לחתונת הרבי והרבנית: החלטה טובה שאבצע היום במיוחד, לגזור ולהניח בתיבה בכניסה לחתונה.'] },
+    { date: '2026-11-25', day: 'יום רביעי', heb: 'ט״ו כסלו', img: 'pop-3.webp', theme: 'הנשמה מאירה בכל מקום',
+      quote: '״ועוד יש לכל נפש אלקית שלשה לבושים, שהם מחשבה דבור ומעשה של תרי״ג מצות התורה.״', source: 'תניא, פרק ד׳',
+      learn: 'לנשמה יש שלושה ״בגדים״: מחשבה, דיבור ומעשה. דרכם הנשמה מאירה החוצה. ובגד אפשר תמיד להחליף.',
+      story: 'החסיד שהחליף בגדים', storyText: 'סוחר חסיד התבייש ללכת בבגדים חסידיים בנסיעות. הרבי עזר לו להבין שהבגדים החסידיים הם מי שהוא באמת.',
+      talk: 'מתי קשה לך להראות מי את, ומה עוזר לך?',
+      task: ['מעשה טוב אחד בכל אחד משלושת הלבושים: במחשבה, בדיבור ובמעשה.'] },
+    { date: '2026-11-26', day: 'יום חמישי', heb: 'ט״ז כסלו', img: 'pop-4.webp', theme: 'בעלת הבית על המחשבות',
+      quote: '״ואפילו אם נופלים לו הרהורי תאוות ושאר מחשבות זרות בשעת העבודה בתורה או בתפלה בכוונה, אל ישית לב אליהן, אלא יסיח דעתו מהן כרגע.״', source: 'תניא, פרק כ״ח',
+      learn: 'מחשבות מפריעות מגיעות לבד, גם בתפילה, וזה לא אומר שאנחנו לא טובות. לא מתווכחות איתן ולא נעצבות בגללן: מפנות מהן את הראש וחוזרות למה שעשינו.',
+      story: 'בעל הבית', storyText: 'רבי זאב מז׳יטומיר לימד יהודי שבעל הבית מחליט מי נכנס לבית. כך גם אנחנו מחליטות אילו מחשבות ייכנסו לראש.',
+      talk: 'איזו מחשבה מפריעה לך הכי הרבה, ומה תעשי כשהיא ״דופקת בדלת״?',
+      task: ['להיות בעלת הבית על המחשבות: להחליף מחשבה מייאשת במחשבה חיובית.'] },
+    { date: '2026-11-27', day: 'יום שישי', heb: 'י״ז כסלו', img: 'pop-5.webp', theme: 'קבלת עול',
+      quote: '״והוא גם הוא מקבל עליו מלכותו להיות מלך עליו ולעבדו ולעשות רצונו בכל מיני עבודת עבד.״', source: 'תניא, פרק מ״א',
+      learn: 'מקבלות את הקב״ה כמלך ועושות את רצונו גם כשקשה וגם כשלא מבינות הכול, כמו חייל נאמן.',
+      story: 'שלושה מלכים ושלושה חיילים', storyText: 'שלושה מלכים בדקו של מי החיילים הנאמנים ביותר. רק החייל הרוסי לא שאל ״למה״, אלא ״לאיזה צד?״.',
+      talk: 'מה הכי קשה לך לעשות בלי לשאול ״למה״?',
+      task: ['לעשות מה שאמא ואבא מבקשים, כבר בפעם הראשונה.'] }
+  ];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var me = null, done = [], cur = -1;
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function today() {
+    var t = new URLSearchParams(location.search).get('d');
+    if (t && /^\d{4}-\d{2}-\d{2}$/.test(t)) return t;
+    var n = new Date(); return n.getFullYear() + '-' + String(n.getMonth() + 1).padStart(2, '0') + '-' + String(n.getDate()).padStart(2, '0');
+  }
+  function isOpen(d) { return today() >= d.date; }
+  function load() { try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch (e) { return null; } }
+  function save(v) { try { if (v) localStorage.setItem(KEY, JSON.stringify(v)); else localStorage.removeItem(KEY); } catch (e) {} }
+  function localDone() { return (me && me.done) || []; }
+
+  function check(code, name) {
+    return fetch(API + '?code=' + encodeURIComponent(code) + '&name=' + encodeURIComponent(name)).then(function (r) { return r.json(); });
+  }
+
+  function showLogin() {
+    $('login').hidden = false; $('app').hidden = true; $('who').hidden = true; $('soon').hidden = true;
+    $('intro').hidden = false;
+  }
+  function showApp() {
+    $('login').hidden = true; $('who').hidden = false; $('intro').hidden = true;
+    $('whoName').textContent = me.name; $('whoCls').textContent = me.cls;
+    if (!isOpen(DAYS[0])) {
+      $('app').hidden = true; $('soon').hidden = false;
+      $('soon').textContent = 'שבוע ההכנה מתחיל ביום ראשון, י״ב כסלו. מאותו יום יופיע כאן מה הבנות למדו.';
+      return;
+    }
+    $('soon').hidden = true; $('app').hidden = false;
+    if (cur < 0 || !isOpen(DAYS[cur])) { cur = 0; DAYS.forEach(function (d, i) { if (isOpen(d)) cur = i; }); }
+    render();
+  }
+
+  function render() {
+    var nav = $('days'); nav.textContent = '';
+    DAYS.forEach(function (d, i) {
+      var b = document.createElement('button'); b.type = 'button';
+      var open = isOpen(d), isDone = done.indexOf(i) >= 0;
+      b.disabled = !open; b.setAttribute('aria-current', i === cur ? 'true' : 'false');
+      b.innerHTML = '<img src="../assets/' + d.img + '" alt=""><b>' + d.day + '</b><small>' + d.heb + (isDone ? ' <span class="tick">✓</span>' : '') + '</small>';
+      b.setAttribute('aria-label', d.day + ', ' + d.heb + (open ? (isDone ? ', דווח' : '') : ', עוד לא נפתח'));
+      b.addEventListener('click', function () { cur = i; render(); });
+      nav.appendChild(b);
+    });
+    var d = DAYS[cur], isDone = done.indexOf(cur) >= 0;
+    $('day').innerHTML =
+      '<div class="day-top"><div><p class="date">' + d.day + ' · ' + d.heb + '</p><h2>' + esc(d.theme) + '</h2></div><img src="../assets/' + d.img + '" alt=""></div>' +
+      '<section class="sec"><h3>מה למדנו היום</h3><p class="quote">' + esc(d.quote) + '<small>(' + esc(d.source) + ')</small></p><p>' + esc(d.learn) + '</p></section>' +
+      '<section class="sec"><h3>הסיפור: ' + esc(d.story) + '</h3><p>' + esc(d.storyText) + '</p></section>' +
+      '<section class="sec"><h3>שאלה לשיחה בבית</h3><p class="talk">' + esc(d.talk) + '</p><p>ואפשר לשאול גם: מה הכיתה בחרה היום בדילמה, ולמה?</p></section>' +
+      '<section class="sec"><h3>המשימה של היום</h3><div class="task">' + (d.task.length > 1 ? '<ul>' + d.task.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' : esc(d.task[0])) + '</div></section>' +
+      '<section class="report" aria-labelledby="repTitle">' + (isDone
+        ? '<div class="done"><strong>תודה, הדיווח התקבל ✓</strong><span>המורה תראה שהמשימה בוצעה.</span></div>'
+        : '<h3 id="repTitle">דיווח למורה</h3><label>רוצים לספר איך זה הלך? (לא חובה)<textarea id="note" rows="3" maxlength="300"></textarea></label><button class="btn" id="send" type="button">המשימה בוצעה ✓</button><p class="msg" id="sendMsg" aria-live="polite"></p>') +
+      '</section>';
+    var send = $('send'); if (send) send.addEventListener('click', report);
+  }
+
+  function report() {
+    var btn = $('send'), msg = $('sendMsg'), day = cur;
+    btn.disabled = true; msg.textContent = '';
+    var body = JSON.stringify({ kind: 'parent', code: me.code, name: me.name, d: day, note: $('note').value.trim() });
+    fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: body })
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (!res.ok) throw new Error(res.error);
+        if (done.indexOf(day) < 0) done.push(day);
+        me.done = done; save(me); render();
+      })
+      .catch(function () { btn.disabled = false; msg.textContent = 'הדיווח לא נשלח. בדקו את החיבור לאינטרנט ונסו שוב.'; });
+  }
+
+  $('login').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var code = $('code').value.trim(), name = $('name').value.replace(/\s+/g, ' ').trim(), msg = $('loginMsg'), go = $('go');
+    if (!code || !name) { msg.textContent = 'נא למלא את קוד הכיתה ואת שם התלמידה.'; return; }
+    go.disabled = true; msg.textContent = '';
+    check(code, name).then(function (res) {
+      go.disabled = false;
+      if (!res.ok) { msg.textContent = 'קוד הכיתה לא נמצא. בדקו את הקוד שקיבלתם מהמורה.'; return; }
+      me = { code: code, name: name, cls: res.cls }; done = res.done || []; me.done = done; save(me); showApp();
+    }).catch(function () { go.disabled = false; msg.textContent = 'לא הצלחנו להתחבר. בדקו את החיבור לאינטרנט ונסו שוב.'; });
+  });
+  $('switch').addEventListener('click', function () { save(null); me = null; done = []; cur = -1; $('code').value = ''; $('name').value = ''; showLogin(); });
+
+  me = load();
+  if (me && me.code && me.name) {
+    done = localDone(); showApp();
+    // Refresh the reported days from the sheet, in case they reported from another phone.
+    check(me.code, me.name).then(function (res) {
+      if (!res.ok) { save(null); me = null; showLogin(); return; }
+      done = res.done || []; me.done = done; me.cls = res.cls; save(me); if (!$('app').hidden) render(); else showApp();
+    }).catch(function () {});
+  } else showLogin();
+})();
+</script>
 </body>
 </html>

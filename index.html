@@ -847,7 +847,7 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
       '<li class="pd-step"><div><h4>מה הייתן עושות? <span class="pill site">באתר</span></h4><div class="pd-vote">' +
         ['א', 'ב'].map(function (v, k) { return '<button type="button" data-v="' + v + '" aria-pressed="' + (mine === v) + '"><b>' + v + '.</b>' + esc(p.options[k]) + '</button>'; }).join('') +
       '</div><p class="pd-tally">' + (mine ? 'הכיתה בחרה ' + mine + '׳. בכל בית הספר עד עכשיו: א׳ – ' + cnt(n[0]) + ' · ב׳ – ' + cnt(n[1]) + '.' : 'המורה מסמנת את התשובה שהכיתה בחרה.') + '</p></div></li>' +
-      '<li class="pd-step"><div><h4>עכשיו לחוברת <span class="pill bk">בחוברת</span></h4><p>פותחות את החוברת ב' + p.day + ': ' + esc(p.book) + '</p><p class="pd-key">האות הסודית של היום מסתתרת בסיפור. מצאתן? כתבו אותה במשבצת בעמוד האחרון של החוברת.</p></div></li>' +
+      '<li class="pd-step"><div><h4>עכשיו לחוברת <span class="pill bk">בחוברת</span></h4><p>פותחות את החוברת ב' + p.day + ': ' + esc(p.book) + '</p><p class="pd-key">האות המאירה של היום מתחבאת בסרטון הדילמה. מצאתן? כתבו אותה במשבצת ״האות המאירה שמצאנו היום״ בחוברת.</p></div></li>' +
       '<li class="pd-step"><div><h4>מה קרה בסוף? <span class="pill site">באתר</span></h4>' + (mine ? slot(p.ending, 'כאן ייכנס סרטון ההמשך') : '<p class="pd-locked">בוחרות תשובה בדילמה, ואז מגלות מה קרה בסוף</p>') + '</div></li>' +
       '<li class="pd-step"><div><h4>המשימה <span class="pill kind">' + esc(p.kind) + '</span></h4><p>' + esc(p.task) + '</p></div></li>' +
       '</ol></article>';
@@ -862,7 +862,7 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
       secretEl.innerHTML = '<div class="reveal"><img src="assets/lantern-on.png" alt=""><strong>לחיים!</strong><p>גיליתן את המילה הסודית. ביום י״ט כסלו יצא אדמו״ר הזקן לחופשי ממאסרו, ומאז מברכים זה את זה: ״לחיים! לשנה טובה בלימוד החסידות ובדרכי החסידות״. נתראה בחג!</p></div>';
       return;
     }
-    secretEl.innerHTML = '<h3 id="secretTitle">המילה הסודית</h3><p>בכל יום מסתתרת בסיפור שבחוברת אות אחת. ' + (ready ? 'כתבו כאן את חמש האותיות לפי סדר הימים:' : 'ב' + PREP[4].day + ', ' + PREP[4].dateText + ', תוכלו לכתוב כאן את חמש האותיות ולגלות את המילה.') + '</p>' +
+    secretEl.innerHTML = '<h3 id="secretTitle">המילה הסודית</h3><p>בכל יום מתחבאת בסרטון הדילמה אות מאירה אחת. ' + (ready ? 'כתבו כאן את חמש האותיות לפי סדר הימים:' : 'ב' + PREP[4].day + ', ' + PREP[4].dateText + ', תוכלו לכתוב כאן את חמש האותיות ולגלות את המילה.') + '</p>' +
       (ready ? '<div class="code" id="code">' + [0, 1, 2, 3, 4].map(function (k) { return '<input maxlength="1" inputmode="text" autocomplete="off" aria-label="אות ' + (k + 1) + '">'; }).join('') + '</div><button class="btn" id="codeGo" type="button">לפתוח</button><p class="secret-msg" id="codeMsg" aria-live="polite"></p>' : '');
     if (!ready) return;
     var ins = [].slice.call(secretEl.querySelectorAll('.code input')), code = document.getElementById('code'), msg = document.getElementById('codeMsg');

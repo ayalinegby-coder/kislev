@@ -6,7 +6,7 @@
 <title>להורים · שבוע ההכנה לי״ט כסלו</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Frank+Ruhl+Libre:wght@900&family=Gveret+Levin&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;700&family=Suez+One&family=Gveret+Levin&display=swap">
 <style>
 :root {
   color-scheme: dark;
@@ -20,10 +20,10 @@
   --ink: #2a2433;
   --line: #59608a;
   --dim: #8a8fb0;
-  --display: "Frank Ruhl Libre", "David Libre", Georgia, serif;
-  --dw: 900;
-  --body: "Assistant", "Arial Hebrew", Arial, sans-serif;
-  --hand: "Gveret Levin", "Assistant", sans-serif;
+  --display: "Suez One", "Frank Ruhl Libre", Georgia, serif;
+  --dw: 400;
+  --body: "Rubik", "Arial Hebrew", Arial, sans-serif;
+  --hand: "Gveret Levin", "Rubik", sans-serif;
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
@@ -34,7 +34,10 @@ button { cursor: pointer; }
 :focus-visible { outline: 3px solid var(--flame); outline-offset: 3px; }
 main { max-width: 640px; margin: 0 auto; padding: 22px 16px 60px; display: grid; gap: 22px; }
 
-.school-logo { margin: 0 auto -6px 0; width: 132px; line-height: 0; }
+.logos { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: -6px; }
+.campaign-logo { margin: 0; width: 150px; line-height: 0; }
+.campaign-logo img { display: block; width: 100%; height: auto; filter: drop-shadow(0 0 2px rgba(255, 255, 255, .95)) drop-shadow(0 0 5px rgba(255, 255, 255, .8)) drop-shadow(0 0 14px rgba(241, 230, 207, .55)); }
+.school-logo { margin: 0; width: 132px; line-height: 0; }
 .school-logo img { display: block; width: 100%; height: auto; filter: drop-shadow(0 0 2px rgba(255, 255, 255, .95)) drop-shadow(0 0 5px rgba(255, 255, 255, .8)) drop-shadow(0 0 14px rgba(241, 230, 207, .55)); }
 .head { text-align: center; display: grid; gap: 4px; justify-items: center; }
 .head img { width: 64px; filter: drop-shadow(0 0 20px rgba(240, 178, 60, .75)); }
@@ -87,7 +90,10 @@ footer { text-align: center; color: var(--dim); font-size: .85rem; }
 </head>
 <body>
 <main>
+  <div class="logos">
+  <p class="campaign-logo"><img src="../assets/campaign-logo.webp" alt="אור וחיות נפשנו · מבצע הכנה לי״ט כסלו תשפ״ז"></p>
   <p class="school-logo"><img src="../assets/school-logo.webp" alt="שליחות ומצוינות, בית ספר חב״ד בנות לוד · רשת אהלי יוסף יצחק" width="640" height="296"></p>
+  </div>
   <header class="head">
     <img src="../assets/lantern-on.png" alt="">
     <p class="eyebrow">אור וחיות נפשנו · שבוע ההכנה לי״ט כסלו</p>

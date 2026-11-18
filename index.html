@@ -200,6 +200,8 @@ html { scroll-behavior: smooth; }
 .hand-glow { position: absolute; z-index: 1; left: -2.6cqw; top: 3.6cqw; width: 7.2cqw; height: 7.2cqw; border-radius: 50%; background: radial-gradient(closest-side, rgba(240, 178, 60, .55), rgba(240, 178, 60, 0)); animation: flicker 2.3s ease-in-out infinite; }
 .friends .girl-2 { z-index: 2; }
 
+.school-logo { position: absolute; z-index: 6; top: 1.6cqw; left: 2cqw; width: 15cqw; margin: 0; line-height: 0; }
+.school-logo img { display: block; width: 100%; height: auto; filter: drop-shadow(0 0 2px rgba(255, 255, 255, .95)) drop-shadow(0 0 5px rgba(255, 255, 255, .8)) drop-shadow(0 0 14px rgba(241, 230, 207, .55)); }
 .masthead { position: absolute; z-index: 5; top: 1.6cqw; right: 2cqw; width: 57cqw; pointer-events: none; text-align: center; display: grid; gap: .5cqw; }
 .eyebrow { margin: 0; color: var(--dim); font-size: max(14px, 1.2cqw); font-weight: 600; }
 .phrase { position: relative; margin: 0; aspect-ratio: 1600 / 257; }
@@ -345,6 +347,7 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
 @media (max-width: 760px) {
   body { font-size: 17px; }
   .scene { width: 100%; }
+  .school-logo { position: static; width: 132px; margin: 12px auto 0 max(16px, env(safe-area-inset-left, 0px)); }
   .masthead { position: static; width: auto; gap: 8px; padding-block: 16px 12px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
   .scroller { overflow-x: auto; overscroll-behavior-x: contain; }
   .stage { width: 1120px; }
@@ -365,6 +368,7 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
 <body>
 <div dir="rtl" lang="he">
   <section class="scene" id="scene" aria-label="לוח חודש כסלו">
+    <p class="school-logo"><img src="assets/school-logo.webp" alt="שליחות ומצוינות, בית ספר חב״ד בנות לוד · רשת אהלי יוסף יצחק" width="640" height="296"></p>
     <header class="masthead">
       <p class="eyebrow">חודש כסלו · לוח הפעלה למורות</p>
       <h1 class="phrase" aria-label="אור וחיות נפשנו ניתן לנו">

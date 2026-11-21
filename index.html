@@ -784,7 +784,7 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
   // ---------- Preparation week ----------
   // All texts of the week live here. Videos: put the file name in dilemma / ending when they are ready.
   var PREP = [
-    { day: 'יום ראשון', date: '2026-11-22', pop: 'pop-1.webp', dateText: 'י״ב כסלו', theme: 'מוח שליט על הלב',
+    { day: 'יום ראשון', date: '2026-11-22', pop: 'pop-1.webp', dateText: 'י״ב כסלו', theme: 'מוח שליט על הלב', dilemma: 'd1-dilemma.mp4', dilemmaPoster: 'd1-dilemma-poster.jpg', ending: 'd1-ending.mp4', endingPoster: 'd1-ending-poster.jpg',
       question: 'שירה התאמנה שבועיים לתחרות הריצה. רגע לפני הסיום חברה נתקלה בה והיא נפלה, מול כל הכיתה. הלב שלה רותח מכעס. מה היא תעשה?',
       options: ['לצעוק על החברה מול כולן', 'לעצור, לנשום ולומר: ״זה קרה בטעות״'],
       book: 'הציטוט מתניא, פרק י״ב, והסיפור ״המרגל של אדמו״ר הזקן״.',
@@ -823,7 +823,7 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
     st.votes = votes;
     storePrep(st, kind === 'vote' ? { c: classId, p: i, vote: v } : { c: classId, secret: true }, classId + '|' + (kind === 'vote' ? 'p' + i : 'secret'));
   }
-  function slot(file, empty) { return file ? '<div class="slot"><video controls preload="metadata" playsinline src="assets/' + esc(file) + '"></video></div>' : '<div class="slot">' + empty + '</div>'; }
+  function slot(file, empty, poster) { return file ? '<div class="slot"><video controls preload="metadata" playsinline' + (poster ? ' poster="assets/' + esc(poster) + '"' : '') + ' src="assets/' + esc(file) + '"></video></div>' : '<div class="slot">' + empty + '</div>'; }
   // The pop-ups are built once per opening (so their rise plays once); renderTrail only updates their state.
   var popbook = document.getElementById('popbook'), pbFinal = document.getElementById('pbFinal');
   function buildBook() {
@@ -868,9 +868,9 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
     var p = PREP[prepCur]; if (!p) { prepDayEl.textContent = ''; return; }
     var mine = (prepState().votes || [])[prepCur] || '', n = tally(prepCur);
     prepDayEl.innerHTML = '<article class="pd-card"><header><p class="pd-date">' + p.day + ' · ' + p.dateText + '</p><h3 class="pd-title">' + esc(p.theme) + '</h3></header><ol class="pd-steps">' +
-      '<li class="pd-step"><div><h4>הדילמה <span class="pill site">באתר</span></h4>' + slot(p.dilemma, 'כאן ייכנס סרטון הדילמה') + '<p class="pd-q">' + esc(p.question) + '</p></div></li>' +
+      '<li class="pd-step"><div><h4>הדילמה <span class="pill site">באתר</span></h4>' + slot(p.dilemma, 'כאן ייכנס סרטון הדילמה', p.dilemmaPoster) + '</div></li>' +
       '<li class="pd-step"><div><h4>עכשיו לחוברת <span class="pill bk">בחוברת</span></h4><p>פותחות את החוברת ב' + p.day + ': ' + esc(p.book) + '</p><p class="pd-key">האות המאירה של היום מתחבאת בסרטון הדילמה. מצאתן? כתבו אותה במשבצת ״האות המאירה שמצאנו היום״ בחוברת.</p></div></li>' +
-      '<li class="pd-step"><div><h4>מה קרה בסוף? <span class="pill site">באתר</span></h4>' + slot(p.ending, 'כאן ייכנס סרטון ההמשך') + '</div></li>' +
+      '<li class="pd-step"><div><h4>מה קרה בסוף? <span class="pill site">באתר</span></h4>' + slot(p.ending, 'כאן ייכנס סרטון ההמשך', p.endingPoster) + '</div></li>' +
       '<li class="pd-step"><div><h4>המשימה <span class="pill kind">' + esc(p.kind) + '</span></h4><p>' + esc(p.task) + '</p></div></li>' +
       '</ol></article>';
     renderSecret();

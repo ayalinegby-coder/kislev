@@ -69,7 +69,8 @@ dialog.prep[open] .prep-in { animation: dawn .9s ease both; }
 .prep-head h2 { outline: none; margin: 0; font-family: var(--display); font-weight: var(--dw); font-size: clamp(38px, 6vw, 64px); line-height: 1.05; color: var(--flame); text-shadow: 0 0 18px rgba(240, 178, 60, .35); }
 .prep-sub { margin: 0 auto; max-width: 560px; color: var(--paper-2); }
 /* Jingle: a paper gramophone in the screen's top corner; it opens the dance clip under the title. */
-.jingle { position: absolute; z-index: 2; top: 14px; left: max(16px, env(safe-area-inset-left, 0px)); width: 118px; aspect-ratio: 1; padding: 0; background: none; border: 0; transition: transform .35s ease; }
+.prep-media { position: absolute; z-index: 2; top: 14px; left: max(16px, env(safe-area-inset-left, 0px)); display: flex; gap: 26px; }
+.jingle { position: relative; width: 118px; aspect-ratio: 1; padding: 0; background: none; border: 0; transition: transform .35s ease; }
 .jingle::before { content: ""; position: absolute; inset: -22%; border-radius: 50%; background: radial-gradient(closest-side, rgba(240, 178, 60, .38), rgba(240, 178, 60, 0)); animation: breathe 3.6s ease-in-out infinite; pointer-events: none; }
 .jingle img { position: relative; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(0, 0, 0, .5)); }
 .jingle:hover, .jingle[aria-expanded="true"] { transform: translateY(-4px) rotate(-3deg); }
@@ -77,7 +78,7 @@ dialog.prep[open] .prep-in { animation: dawn .9s ease both; }
 .jingle-player { width: min(100%, 760px); justify-self: center; display: grid; gap: 6px; }
 .jingle-player[hidden] { display: none; }
 .jingle-player .slot { border-radius: 4px; overflow: hidden; box-shadow: 0 0 0 3px var(--flame), 0 0 34px rgba(240, 178, 60, .45), 0 24px 60px rgba(0, 0, 0, .6); }
-@media (max-width: 640px) { .jingle { width: 84px; top: 10px; } .jingle .tag { font-size: 13px; } .prep-head { padding-top: 92px; } }
+@media (max-width: 640px) { .prep-media { top: 10px; gap: 34px; } .jingle { width: 84px; } .jingle .tag { font-size: 13px; } .prep-head { padding-top: 92px; } }
 
 /* ---------- Pop-up book: opens when the door is clicked, one pop-up per day ---------- */
 .popbook { container-type: inline-size; width: min(100%, 900px, 125vh); justify-self: center; }
@@ -457,7 +458,8 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
         <h2 id="prepTitle" tabindex="-1" autofocus>שבוע ההכנה</h2>
         <p class="prep-sub">כל יום: דילמה באתר, לימוד בחוברת, וחזרה לאתר לגלות מה קרה בסוף.</p>
       </header>
-      <button class="jingle" id="jingleBtn" type="button" aria-expanded="false" aria-controls="jinglePlayer"><img src="assets/jingle-icon.webp" alt=""><span class="tag"><b>הג׳ינגל</b>לצפייה ולריקוד</span></button>
+      <div class="prep-media"><button class="jingle" id="jingleBtn" type="button" aria-expanded="false" aria-controls="jinglePlayer"><img src="assets/jingle-icon.webp" alt=""><span class="tag"><b>הג׳ינגל</b>לצפייה ולריקוד</span></button><button class="jingle" id="explainBtn" type="button" aria-expanded="false" aria-controls="explainPlayer"><img src="assets/explainer-icon.webp" alt=""><span class="tag"><b>סרטון ההסבר</b>איך זה עובד?</span></button></div>
+      <div class="jingle-player" id="explainPlayer" hidden><div class="slot"><video controls preload="none" playsinline poster="assets/explainer-poster.jpg" src="assets/explainer.mp4"></video></div></div>
       <div class="jingle-player" id="jinglePlayer" hidden><div class="slot"><video controls preload="none" playsinline poster="assets/jingle-poster.jpg" src="assets/jingle.mp4"></video></div></div>
       <div class="popbook" id="popbook">
         <div class="pb-stage">
@@ -915,13 +917,20 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
   });
   prepDlg.addEventListener('close', function () { door.classList.remove('open'); [].forEach.call(prepDlg.querySelectorAll('video'), function (v) { v.pause(); }); });
   document.getElementById('prepClose').addEventListener('click', function () { prepDlg.close(); });
-  // The jingle opens under the title and starts playing; a second press closes it.
-  var jingleBtn = document.getElementById('jingleBtn'), jinglePlayer = document.getElementById('jinglePlayer'), jingleVid = jinglePlayer.querySelector('video');
-  jingleBtn.addEventListener('click', function () {
-    var show = jinglePlayer.hidden;
-    jinglePlayer.hidden = !show; jingleBtn.setAttribute('aria-expanded', show ? 'true' : 'false');
-    if (show) { jinglePlayer.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' }); var pr = jingleVid.play(); if (pr && pr.catch) pr.catch(function () {}); }
-    else jingleVid.pause();
+  // The jingle and the explainer each open under the title and start playing; opening one closes the other, a second press closes it.
+  var media = [['jingleBtn', 'jinglePlayer'], ['explainBtn', 'explainPlayer']].map(function (ids) {
+    var btn = document.getElementById(ids[0]), pl = document.getElementById(ids[1]); return { btn: btn, pl: pl, v: pl.querySelector('video') };
+  });
+  function closeMedia(m) { m.pl.hidden = true; m.btn.setAttribute('aria-expanded', 'false'); m.v.pause(); }
+  media.forEach(function (m) {
+    m.btn.addEventListener('click', function () {
+      var show = m.pl.hidden;
+      media.forEach(closeMedia);
+      if (!show) return;
+      m.pl.hidden = false; m.btn.setAttribute('aria-expanded', 'true');
+      m.pl.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
+      var pr = m.v.play(); if (pr && pr.catch) pr.catch(function () {});
+    });
   });
   // Votes from other classes arrive with the regular sync; redraw only when something changed.
   setInterval(function () {

@@ -64,7 +64,7 @@ dialog.prep[open] .prep-in { animation: dawn .9s ease both; }
 .prep-in { position: relative; max-width: 1000px; margin: 0 auto; padding: 22px max(16px, env(safe-area-inset-right, 0px)) 64px max(16px, env(safe-area-inset-left, 0px)); display: grid; gap: 26px; }
 .prep-close { justify-self: start; display: inline-flex; align-items: center; gap: 6px; background: none; border: 0; padding: 6px 0; color: var(--paper-2); font-weight: 600; }
 .prep-close:hover { color: var(--flame); }
-.prep-head { text-align: center; display: grid; gap: 6px; }
+.prep-head { text-align: center; display: grid; gap: 6px; padding-top: 112px; }
 .prep-head .eyebrow { margin: 0; color: var(--dim); font-weight: 600; font-size: 1rem; }
 .prep-head h2 { outline: none; margin: 0; font-family: var(--display); font-weight: var(--dw); font-size: clamp(38px, 6vw, 64px); line-height: 1.05; color: var(--flame); text-shadow: 0 0 18px rgba(240, 178, 60, .35); }
 .prep-sub { margin: 0 auto; max-width: 560px; color: var(--paper-2); }
@@ -78,7 +78,7 @@ dialog.prep[open] .prep-in { animation: dawn .9s ease both; }
 .jingle-player { width: min(100%, 760px); justify-self: center; display: grid; gap: 6px; }
 .jingle-player[hidden] { display: none; }
 .jingle-player .slot { border-radius: 4px; overflow: hidden; box-shadow: 0 0 0 3px var(--flame), 0 0 34px rgba(240, 178, 60, .45), 0 24px 60px rgba(0, 0, 0, .6); }
-@media (max-width: 640px) { .prep-media { top: 10px; gap: 34px; } .jingle { width: 84px; } .jingle .tag { font-size: 13px; } .prep-head { padding-top: 92px; } }
+@media (max-width: 640px) { .prep-media { top: 58px; left: 0; right: 0; justify-content: center; gap: 24px; } .jingle { width: 80px; } .jingle .tag { font-size: 13px; } .prep-head { padding-top: 150px; } }
 
 /* ---------- Pop-up book: opens when the door is clicked, one pop-up per day ---------- */
 .popbook { container-type: inline-size; width: min(100%, 900px, 125vh); justify-self: center; }
@@ -458,9 +458,10 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
         <h2 id="prepTitle" tabindex="-1" autofocus>שבוע ההכנה</h2>
         <p class="prep-sub">כל יום: דילמה באתר, לימוד בחוברת, וחזרה לאתר לגלות מה קרה בסוף.</p>
       </header>
-      <div class="prep-media"><button class="jingle" id="jingleBtn" type="button" aria-expanded="false" aria-controls="jinglePlayer"><img src="assets/jingle-icon.webp" alt=""><span class="tag"><b>הג׳ינגל</b>לצפייה ולריקוד</span></button><button class="jingle" id="explainBtn" type="button" aria-expanded="false" aria-controls="explainPlayer"><img src="assets/explainer-icon.webp" alt=""><span class="tag"><b>סרטון ההסבר</b>איך זה עובד?</span></button></div>
+      <div class="prep-media"><button class="jingle" id="jingleBtn" type="button" aria-expanded="false" aria-controls="jinglePlayer"><img src="assets/jingle-icon.webp" alt=""><span class="tag"><b>הג׳ינגל</b>לצפייה ולריקוד</span></button><button class="jingle" id="explainBtn" type="button" aria-expanded="false" aria-controls="explainPlayer"><img src="assets/explainer-icon.webp" alt=""><span class="tag"><b>סרטון ההסבר</b>איך זה עובד?</span></button><button class="jingle" id="lyricsBtn" type="button" aria-expanded="false" aria-controls="lyricsPlayer"><img src="assets/lyrics-icon.webp" alt=""><span class="tag"><b>קליפ המילים</b>שרות יחד!</span></button></div>
       <div class="jingle-player" id="explainPlayer" hidden><div class="slot"><video controls preload="none" playsinline poster="assets/explainer-poster.jpg" src="assets/explainer.mp4"></video></div></div>
       <div class="jingle-player" id="jinglePlayer" hidden><div class="slot"><video controls preload="none" playsinline poster="assets/jingle-poster.jpg" src="assets/jingle.mp4"></video></div></div>
+      <div class="jingle-player" id="lyricsPlayer" hidden><div class="slot"><video controls preload="none" playsinline poster="assets/lyrics-poster.jpg" src="assets/lyrics.mp4"></video></div></div>
       <div class="popbook" id="popbook">
         <div class="pb-stage">
           <div class="pb-book">
@@ -917,8 +918,8 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
   });
   prepDlg.addEventListener('close', function () { door.classList.remove('open'); [].forEach.call(prepDlg.querySelectorAll('video'), function (v) { v.pause(); }); });
   document.getElementById('prepClose').addEventListener('click', function () { prepDlg.close(); });
-  // The jingle and the explainer each open under the title and start playing; opening one closes the other, a second press closes it.
-  var media = [['jingleBtn', 'jinglePlayer'], ['explainBtn', 'explainPlayer']].map(function (ids) {
+  // The jingle, the explainer and the lyric clip each open under the title and start playing; opening one closes the other, a second press closes it.
+  var media = [['jingleBtn', 'jinglePlayer'], ['explainBtn', 'explainPlayer'], ['lyricsBtn', 'lyricsPlayer']].map(function (ids) {
     var btn = document.getElementById(ids[0]), pl = document.getElementById(ids[1]); return { btn: btn, pl: pl, v: pl.querySelector('video') };
   });
   function closeMedia(m) { m.pl.hidden = true; m.btn.setAttribute('aria-expanded', 'false'); m.v.pause(); }

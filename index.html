@@ -138,6 +138,12 @@ dialog.prep[open] .prep-in { animation: dawn .9s ease both; }
 .pd-cheer p { font-weight: 600; color: var(--felt); }
 .pd-cheer b { font-family: var(--display); font-weight: var(--dw); font-size: 1.25em; color: var(--gold); }
 .pd-names { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.pd-names li .pd-unsign { margin-inline-start: 6px; padding: 0 4px; border: 0; background: none; color: #8a6d3b; font-size: 1.05rem; line-height: 1; cursor: pointer; }
+.pd-sign { display: grid; gap: 6px; padding-top: 4px; border-top: 1px dashed rgba(201, 151, 63, .45); }
+.pd-sign label { font-size: .95rem; color: #6d6252; }
+.pd-sign div { display: flex; gap: 8px; }
+.pd-sign input { flex: 1; min-width: 0; padding: 7px 10px; border: 1.5px solid rgba(28, 35, 75, .25); border-radius: 8px; font: inherit; background: #fff; }
+.pd-sign button { padding: 7px 14px; border: 0; border-radius: 8px; background: var(--felt); color: var(--paper); font: inherit; font-weight: 700; cursor: pointer; }
 .pd-names li { padding: 4px 10px; border-radius: 8px; background: var(--paper); border: 1.5px solid var(--gold); color: var(--felt); font-weight: 600; font-size: .95rem; }
 .pill { display: inline-block; padding: 1px 10px 2px; font-family: var(--body); font-size: .8rem; font-weight: 700; line-height: 1.5; border-radius: 99px; }
 .pill.site { background: var(--felt); color: var(--paper); }
@@ -831,13 +837,39 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
   }
   // Parents' reports from the day before (the parents' page counts every day from י״ב, י״ד included).
   var REPORT_FROM = Date.UTC(2026, 10, 22);
+  function reportDay(p) { var parts = p.date.split('-'); return Math.round((Date.UTC(+parts[0], parts[1] - 1, +parts[2]) - REPORT_FROM) / 864e5) - 1; }
   function cheer(p) {
-    var parts = p.date.split('-'), d = Math.round((Date.UTC(+parts[0], parts[1] - 1, +parts[2]) - REPORT_FROM) / 864e5) - 1;
-    var names = d >= 0 && (prepState().reports || [])[d] || [];
-    if (!names.length) return '';
-    var n = names.length, head = n === 1 ? 'אתמול דיווחה בכיתה שלנו <b>בת אחת</b>! יישר כוח ל:' : 'אתמול דיווחו בכיתה שלנו <b>' + n + '</b> בנות! יישר כוח ל:';
-    return '<div class="pd-cheer"><p>' + head + '</p><ul class="pd-names">' + names.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>';
+    var d = reportDay(p); if (d < 0) return '';
+    var st = prepState(), signed = (st.signed || [])[d] || [], names = ((st.reports || [])[d] || []).slice();
+    signed.forEach(function (x) { if (names.indexOf(x) < 0) names.push(x); });
+    var n = names.length, html = '<div class="pd-cheer">';
+    if (n) {
+      html += '<p>' + (n === 1 ? 'אתמול דיווחה בכיתה שלנו <b>בת אחת</b>! יישר כוח ל:' : 'אתמול דיווחו בכיתה שלנו <b>' + n + '</b> בנות! יישר כוח ל:') + '</p><ul class="pd-names">' +
+        names.map(function (x) { return '<li>' + esc(x) + (signed.indexOf(x) >= 0 ? '<button type="button" class="pd-unsign" data-name="' + esc(x) + '" aria-label="להסיר את ' + esc(x) + '">×</button>' : '') + '</li>'; }).join('') + '</ul>';
+    }
+    html += '<form class="pd-sign" data-d="' + d + '"><label for="signName">הביאו חתימה בחוברת? הוסיפי את שמן:</label><div><input id="signName" maxlength="40" placeholder="שם התלמידה" autocomplete="off"><button type="submit">הוספה</button></div></form></div>';
+    return html;
   }
+  function setSign(d, name, add) {
+    name = name.replace(/\s+/g, ' ').trim().slice(0, 40); if (!name) return;
+    var st = JSON.parse(JSON.stringify(prepState())), signed = st.signed || [];
+    while (signed.length < 6) signed.push([]);
+    var list = signed[d], k = list.indexOf(name);
+    if (add && k < 0) list.push(name); if (!add && k >= 0) list.splice(k, 1);
+    st.signed = signed;
+    storePrep(st, { kind: 'sign', c: classId, d: d, name: name, add: add }, classId + '|sign|' + d + '|' + name);
+    renderPrep();
+  }
+  prepDayEl.addEventListener('submit', function (e) {
+    var f = e.target.closest('.pd-sign'); if (!f) return; e.preventDefault();
+    var inp = f.querySelector('input'), v = inp.value; inp.value = '';
+    setSign(+f.dataset.d, v, true);
+    var again = prepDayEl.querySelector('#signName'); if (again) again.focus();
+  });
+  prepDayEl.addEventListener('click', function (e) {
+    var b = e.target.closest('.pd-unsign'); if (!b) return;
+    var f = prepDayEl.querySelector('.pd-sign'); if (f) setSign(+f.dataset.d, b.dataset.name, false);
+  });
   function slot(file, empty, poster) { return file ? '<div class="slot"><video controls preload="metadata" playsinline' + (poster ? ' poster="assets/' + esc(poster) + '"' : '') + ' src="assets/' + esc(file) + '"></video></div>' : '<div class="slot">' + empty + '</div>'; }
   // The pop-ups are built once per opening (so their rise plays once); renderTrail only updates their state.
   var popbook = document.getElementById('popbook'), pbFinal = document.getElementById('pbFinal');
@@ -951,7 +983,7 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
   setInterval(function () {
     refreshDoor();
     if (!prepDlg.open) return;
-    var sig = classId + JSON.stringify(CLASSES.map(function (c) { var s = prepState(c.id); return [s.votes, s.secret]; })) + JSON.stringify(prepState().reports || []);
+    var sig = classId + JSON.stringify(CLASSES.map(function (c) { var s = prepState(c.id); return [s.votes, s.secret]; })) + JSON.stringify([prepState().reports || [], prepState().signed || []]);
     if (sig !== prepSig) { prepSig = sig; if (!prepDayEl.contains(document.activeElement) && !secretEl.contains(document.activeElement)) renderPrep(); }
   }, 3000);
   refreshDoor();

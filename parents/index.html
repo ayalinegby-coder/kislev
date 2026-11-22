@@ -32,7 +32,9 @@ body { margin: 0; min-height: 100vh; background: radial-gradient(ellipse at 50% 
 button, input, textarea { font: inherit; }
 button { cursor: pointer; }
 :focus-visible { outline: 3px solid var(--flame); outline-offset: 3px; }
-main { max-width: 640px; margin: 0 auto; padding: 22px 16px 60px; display: grid; gap: 22px; }
+main { max-width: 640px; margin: 0 auto; padding: 22px 16px 60px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; }
+#app { display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0; }
+#app[hidden] { display: none; }
 
 .logos { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: -6px; }
 .campaign-logo { margin: 0; width: 150px; line-height: 0; }
@@ -79,6 +81,9 @@ input:focus, textarea:focus { border-color: var(--flame); outline: none; }
 .talk { padding: 12px 14px; background: #fff4d6; border-inline-start: 4px solid var(--flame); }
 .task { padding: 14px; background: #eef1fa; border-inline-start: 4px solid var(--felt); }
 .task ul { margin: 6px 0 0; padding-inline-start: 20px; }
+.todo { display: grid; gap: 10px; }
+.todo p { margin: 0; font-weight: 600; }
+.todo textarea { min-height: 70px; }
 
 .report { display: grid; gap: 10px; padding-top: 6px; border-top: 2px dashed #d9c7a0; }
 .report h3 { margin: 0; font-family: var(--display); font-weight: var(--dw); font-size: 1.15rem; color: var(--felt); }
@@ -130,37 +135,37 @@ footer { text-align: center; color: var(--dim); font-size: .85rem; }
       learn: 'הקב״ה ברא אותנו כך שהשכל חזק מהרגש. גם כשהלב רוצה לכעוס או להתעצל, כל אחת יכולה לעצור, לחשוב ולהחליט בעצמה מה לעשות.',
       story: 'המרגל של אדמו״ר הזקן', storyText: 'רבי משה מייזליש ריגל במפקדת נפוליאון. נפוליאון הניח יד על ליבו, והלב פעם ברוגע. ״מוח שליט על הלב״ הציל את חייו.',
       talk: 'ספרי לי על רגע שבו הלב רצה לכעוס, והשכל החליט אחרת.',
-      task: ['לרשום בחוברת משהו שיכול מאוד להכעיס אותי, ואיך התגברתי.'] },
+      todo: { lines: ['משהו שיכול מאוד להכעיס אותי אבל אני מתגברת:'], fields: [''] } },
     { date: '2026-11-23', day: 'יום שני', heb: 'י״ג כסלו', img: 'pop-2.webp', theme: 'אהבת ישראל',
       quote: '״הרי זו דרך ישרה וקלה לבוא לידי קיום מצות ׳ואהבת לרעך כמוך׳ לכל נפש מישראל, למגדול ועד קטן.״', source: 'תניא, פרק ל״ב',
       learn: 'מבחוץ אנחנו שונות זו מזו, אבל כל הנשמות באות ממקום אחד, ״אחים ממש״. לכן אפשר לאהוב כל יהודי, גם מי שלא דומה לנו.',
       story: 'אהבת ישראל בהידור', storyText: 'החסיד ר׳ ישראל לוין עזר בחום לאדם שכולם התרחקו ממנו. ״כשאוהבים יהודי רק מפני שהוא יהודי, זו אהבת ישראל בהידור.״',
       talk: 'מי בכיתה הכי שונה ממך? מה טוב בה?',
-      task: ['לשים לב מי מהבנות לא הגיעה לכיתה, ולהתקשר להתעניין בשלומה.', 'להתנהג באהבת ישראל מיוחדת עם האחים בבית.'] },
+      todo: { lines: ['משימה 1: היום אשים לב מי מהבנות בכיתה לא הגיעה ואתקשר להתעניין בשלומה', 'משימה 2: אתנהג באהבת ישראל מיוחדת עם האחים שלי'], fields: ['ביצעתי את משימה'] } },
     { date: '2026-11-24', day: 'יום שלישי', heb: 'י״ד כסלו', img: 'pop-chuppah.webp', theme: 'היום שקישר אותנו',
       quote: '״כי יניקת וחיות נפש רוח ונשמה של עמי הארץ הוא מנפש רוח ונשמה של הצדיקים והחכמים ראשי בני ישראל שבדורם.״', source: 'תניא, פרק ב׳',
       learn: 'י״ד כסלו הוא יום חתונת הרבי והרבנית. הרבי אמר: ״זה היום שקישר אותי עם החסידים, ואת החסידים איתי״. מתחזקות בקשר לרבי בלימוד תורתו, בקיום הוראותיו ובמעשים טובים.',
       story: 'שמחה בשני מקומות', storyText: 'הורי הרבי לא הורשו לצאת מרוסיה לחתונה בוורשה, ולכן ערכו חגיגה משלהם. באותו לילה נחגגה החתונה בשתי מדינות.',
       talk: 'איזו הוראה של הרבי את הכי אוהבת לקיים?',
-      task: ['לתת מתנה לחתונת הרבי והרבנית: החלטה טובה שאבצע היום במיוחד, לגזור ולהניח בתיבה בכניסה לחתונה.'] },
+      todo: { lines: ['נותנת מתנה לחתונת הרבי והרבנית: החלטה טובה שאבצע היום במיוחד'], fields: [''] } },
     { date: '2026-11-25', day: 'יום רביעי', heb: 'ט״ו כסלו', img: 'pop-3.webp', theme: 'הנשמה מאירה בכל מקום',
       quote: '״ועוד יש לכל נפש אלקית שלשה לבושים, שהם מחשבה דבור ומעשה של תרי״ג מצות התורה.״', source: 'תניא, פרק ד׳',
       learn: 'לנשמה יש שלושה ״בגדים״: מחשבה, דיבור ומעשה. דרכם הנשמה מאירה החוצה. ובגד אפשר תמיד להחליף.',
       story: 'החסיד שהחליף בגדים', storyText: 'סוחר חסיד התבייש ללכת בבגדים חסידיים בנסיעות. הרבי עזר לו להבין שהבגדים החסידיים הם מי שהוא באמת.',
       talk: 'מתי קשה לך להראות מי את, ומה עוזר לך?',
-      task: ['מעשה טוב אחד בכל אחד משלושת הלבושים: במחשבה, בדיבור ובמעשה.'] },
+      todo: { lines: ['איזה מעשה טוב עשיתי היום בכל אחד משלושת הלבושים?'], fields: ['מחשבה', 'דיבור', 'מעשה'] } },
     { date: '2026-11-26', day: 'יום חמישי', heb: 'ט״ז כסלו', img: 'pop-4.webp', theme: 'בעלת הבית על המחשבות',
       quote: '״ואפילו אם נופלים לו הרהורי תאוות ושאר מחשבות זרות בשעת העבודה בתורה או בתפלה בכוונה, אל ישית לב אליהן, אלא יסיח דעתו מהן כרגע.״', source: 'תניא, פרק כ״ח',
       learn: 'מחשבות מפריעות מגיעות לבד, גם בתפילה, וזה לא אומר שאנחנו לא טובות. לא מתווכחות איתן ולא נעצבות בגללן: מפנות מהן את הראש וחוזרות למה שעשינו.',
       story: 'בעל הבית', storyText: 'רבי זאב מז׳יטומיר לימד יהודי שבעל הבית מחליט מי נכנס לבית. כך גם אנחנו מחליטות אילו מחשבות ייכנסו לראש.',
       talk: 'איזו מחשבה מפריעה לך הכי הרבה, ומה תעשי כשהיא ״דופקת בדלת״?',
-      task: ['להיות בעלת הבית על המחשבות: להחליף מחשבה מייאשת במחשבה חיובית.'] },
+      todo: { lines: ['היום אני בעלת הבית על המחשבות שלי.', 'מחשבה מייאשת שהחלפתי במחשבה חיובית:'], fields: [''] } },
     { date: '2026-11-27', day: 'יום שישי', heb: 'י״ז כסלו', img: 'pop-5.webp', theme: 'קבלת עול',
       quote: '״והוא גם הוא מקבל עליו מלכותו להיות מלך עליו ולעבדו ולעשות רצונו בכל מיני עבודת עבד.״', source: 'תניא, פרק מ״א',
       learn: 'מקבלות את הקב״ה כמלך ועושות את רצונו גם כשקשה וגם כשלא מבינות הכול, כמו חייל נאמן.',
       story: 'שלושה מלכים ושלושה חיילים', storyText: 'שלושה מלכים בדקו של מי החיילים הנאמנים ביותר. רק החייל הרוסי לא שאל ״למה״, אלא ״לאיזה צד?״.',
       talk: 'מה הכי קשה לך לעשות בלי לשאול ״למה״?',
-      task: ['לעשות מה שאמא ואבא מבקשים, כבר בפעם הראשונה.'] }
+      todo: { lines: ['היום בקבלת עול עושה מה שאמא/אבא מבקשים ממני בפעם הראשונה'], fields: [''] } }
   ];
 
   var $ = function (id) { return document.getElementById(id); };
@@ -213,11 +218,11 @@ footer { text-align: center; color: var(--dim); font-size: .85rem; }
       '<div class="day-top"><div><p class="date">' + d.day + ' · ' + d.heb + '</p><h2>' + esc(d.theme) + '</h2></div><img src="../assets/' + d.img + '" alt=""></div>' +
       '<section class="sec"><h3>מה למדנו היום</h3><p class="quote">' + esc(d.quote) + '<small>(' + esc(d.source) + ')</small></p><p>' + esc(d.learn) + '</p></section>' +
       '<section class="sec"><h3>הסיפור: ' + esc(d.story) + '</h3><p>' + esc(d.storyText) + '</p></section>' +
-      '<section class="sec"><h3>שאלה לשיחה בבית</h3><p class="talk">' + esc(d.talk) + '</p><p>ואפשר לשאול גם: מה היית עושה את בדילמה של היום, ולמה?</p></section>' +
-      '<section class="sec"><h3>המשימה של היום</h3><div class="task">' + (d.task.length > 1 ? '<ul>' + d.task.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' : esc(d.task[0])) + '</div></section>' +
       '<section class="report" aria-labelledby="repTitle">' + (isDone
         ? '<div class="done"><strong>תודה, הדיווח התקבל ✓</strong><span>המורה תראה שהמשימה בוצעה.</span></div>'
-        : '<h3 id="repTitle">דיווח למורה</h3><label>רוצים לספר איך זה הלך? (לא חובה)<textarea id="note" rows="3" maxlength="300"></textarea></label><button class="btn" id="send" type="button">המשימה בוצעה ✓</button><p class="msg" id="sendMsg" aria-live="polite"></p>') +
+        : '<h3 id="repTitle">המשימה להיום:</h3><div class="todo">' + d.todo.lines.map(function (l) { return '<p>' + esc(l) + '</p>'; }).join('') +
+          d.todo.fields.map(function (f, k) { return f ? '<label>' + esc(f) + '<textarea class="ans" rows="2" maxlength="300" data-f="' + esc(f) + '"></textarea></label>' : '<textarea class="ans" rows="3" maxlength="300" aria-label="המשימה להיום"></textarea>'; }).join('') +
+          '</div><button class="btn" id="send" type="button">המשימה בוצעה ✓</button><p class="msg" id="sendMsg" aria-live="polite"></p>') +
       '</section>';
     var send = $('send'); if (send) send.addEventListener('click', report);
   }
@@ -225,7 +230,9 @@ footer { text-align: center; color: var(--dim); font-size: .85rem; }
   function report() {
     var btn = $('send'), msg = $('sendMsg'), day = cur;
     btn.disabled = true; msg.textContent = '';
-    var body = JSON.stringify({ kind: 'parent', code: me.code, name: me.name, d: day, note: $('note').value.trim() });
+    var parts = [].map.call(document.querySelectorAll('#day .ans'), function (t) { var v = t.value.trim(); return v && t.dataset.f ? t.dataset.f + ': ' + v : v; }).filter(Boolean);
+    if (!parts.length) { btn.disabled = false; msg.textContent = 'נא לכתוב את המשימה לפני השליחה.'; return; }
+    var body = JSON.stringify({ kind: 'parent', code: me.code, name: me.name, d: day, note: parts.join(' | ') });
     fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: body })
       .then(function (r) { return r.json(); })
       .then(function (res) {

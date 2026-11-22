@@ -134,6 +134,11 @@ dialog.prep[open] .prep-in { animation: dawn .9s ease both; }
 .pd-step > div { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; min-width: 0; }
 .pd-step h4 { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-family: var(--display); font-weight: var(--dw); font-size: 1.25rem; color: var(--moss-deep); }
 .pd-step p { margin: 0; }
+.pd-cheer { display: grid; gap: 8px; margin-top: 4px; padding: 12px 14px; border-radius: 12px; background: #fffaf0; border: 1px solid rgba(201, 151, 63, .45); }
+.pd-cheer p { font-weight: 600; color: var(--felt); }
+.pd-cheer b { font-family: var(--display); font-weight: var(--dw); font-size: 1.25em; color: var(--gold); }
+.pd-names { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.pd-names li { padding: 4px 10px; border-radius: 8px; background: var(--paper); border: 1.5px solid var(--gold); color: var(--felt); font-weight: 600; font-size: .95rem; }
 .pill { display: inline-block; padding: 1px 10px 2px; font-family: var(--body); font-size: .8rem; font-weight: 700; line-height: 1.5; border-radius: 99px; }
 .pill.site { background: var(--felt); color: var(--paper); }
 .pill.bk { background: var(--moss); color: #fff; }
@@ -824,6 +829,15 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
     st.votes = votes;
     storePrep(st, kind === 'vote' ? { c: classId, p: i, vote: v } : { c: classId, secret: true }, classId + '|' + (kind === 'vote' ? 'p' + i : 'secret'));
   }
+  // Parents' reports from the day before (the parents' page counts every day from י״ב, י״ד included).
+  var REPORT_FROM = Date.UTC(2026, 10, 22);
+  function cheer(p) {
+    var parts = p.date.split('-'), d = Math.round((Date.UTC(+parts[0], parts[1] - 1, +parts[2]) - REPORT_FROM) / 864e5) - 1;
+    var names = d >= 0 && (prepState().reports || [])[d] || [];
+    if (!names.length) return '';
+    var n = names.length, head = n === 1 ? 'אתמול דיווחה בכיתה שלנו <b>בת אחת</b>! יישר כוח ל:' : 'אתמול דיווחו בכיתה שלנו <b>' + n + '</b> בנות! יישר כוח ל:';
+    return '<div class="pd-cheer"><p>' + head + '</p><ul class="pd-names">' + names.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>';
+  }
   function slot(file, empty, poster) { return file ? '<div class="slot"><video controls preload="metadata" playsinline' + (poster ? ' poster="assets/' + esc(poster) + '"' : '') + ' src="assets/' + esc(file) + '"></video></div>' : '<div class="slot">' + empty + '</div>'; }
   // The pop-ups are built once per opening (so their rise plays once); renderTrail only updates their state.
   var popbook = document.getElementById('popbook'), pbFinal = document.getElementById('pbFinal');
@@ -872,7 +886,7 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
       '<li class="pd-step"><div><h4>הדילמה <span class="pill site">באתר</span></h4>' + slot(p.dilemma, 'כאן ייכנס סרטון הדילמה', p.dilemmaPoster) + '</div></li>' +
       '<li class="pd-step"><div><h4>עכשיו לחוברת <span class="pill bk">בחוברת</span></h4><p>פותחות את החוברת ב' + p.day + ': ' + esc(p.book) + '</p><p class="pd-key">האות המאירה של היום מתחבאת בסרטון הדילמה. מצאתן? כתבו אותה במשבצת ״האות המאירה שמצאנו היום״ בחוברת.</p></div></li>' +
       '<li class="pd-step"><div><h4>מה קרה בסוף? <span class="pill site">באתר</span></h4>' + slot(p.ending, 'כאן ייכנס סרטון ההמשך', p.endingPoster) + '</div></li>' +
-      '<li class="pd-step"><div><h4>המשימה <span class="pill kind">' + esc(p.kind) + '</span></h4><p>' + esc(p.task) + '</p></div></li>' +
+      '<li class="pd-step"><div><h4>המשימה <span class="pill kind">' + esc(p.kind) + '</span></h4><p>' + esc(p.task) + '</p>' + cheer(p) + '</div></li>' +
       '</ol></article>';
     renderSecret();
   }
@@ -937,7 +951,7 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
   setInterval(function () {
     refreshDoor();
     if (!prepDlg.open) return;
-    var sig = classId + JSON.stringify(CLASSES.map(function (c) { var s = prepState(c.id); return [s.votes, s.secret]; }));
+    var sig = classId + JSON.stringify(CLASSES.map(function (c) { var s = prepState(c.id); return [s.votes, s.secret]; })) + JSON.stringify(prepState().reports || []);
     if (sig !== prepSig) { prepSig = sig; if (!prepDayEl.contains(document.activeElement) && !secretEl.contains(document.activeElement)) renderPrep(); }
   }, 3000);
   refreshDoor();

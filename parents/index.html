@@ -82,6 +82,9 @@ input:focus, textarea:focus { border-color: var(--flame); outline: none; }
 .task { padding: 14px; background: #eef1fa; border-inline-start: 4px solid var(--felt); }
 .task ul { margin: 6px 0 0; padding-inline-start: 20px; }
 .todo { display: grid; gap: 10px; }
+.pic { margin: 0; display: grid; gap: 6px; }
+.pic img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border: 4px solid #fffaf0; box-shadow: 0 0 0 1px #d9c7a0, 0 10px 24px rgba(42, 36, 51, .25); }
+.pic figcaption { color: #6d6252; font-size: .9rem; text-align: center; }
 .todo p { margin: 0; font-weight: 600; }
 .todo textarea { min-height: 70px; }
 
@@ -130,7 +133,7 @@ footer { text-align: center; color: var(--dim); font-size: .85rem; }
   var API = 'https://script.google.com/macros/s/AKfycbzplu_IajxMGmVkBeDsCiWHjhclrpPZoe9m6ZpGVcA7hpEvWTlE050480mQy4OmHykV/exec';
   var KEY = 'kislev-parent';
   var DAYS = [
-    { date: '2026-11-22', day: 'יום ראשון', heb: 'י״ב כסלו', img: 'pop-1.webp', theme: 'מוח שליט על הלב',
+    { date: '2026-11-22', day: 'יום ראשון', heb: 'י״ב כסלו', img: 'pop-1.webp', pic: 'd1-pic.webp', theme: 'מוח שליט על הלב',
       quote: '״כי המוח שליט על הלב בתולדתו וטבע יצירתו... שכל אדם יכול ברצונו שבמוחו להתאפק ולמשול ברוח תאוותו שבלבו.״', source: 'תניא, פרק י״ב',
       learn: 'הקב״ה ברא אותנו כך שהשכל חזק מהרגש. גם כשהלב רוצה לכעוס או להתעצל, כל אחת יכולה לעצור, לחשוב ולהחליט בעצמה מה לעשות.',
       story: 'המרגל של אדמו״ר הזקן', storyText: 'רבי משה מייזליש ריגל במפקדת נפוליאון. נפוליאון הניח יד על ליבו, והלב פעם ברוגע. ״מוח שליט על הלב״ הציל את חייו.',
@@ -216,6 +219,7 @@ footer { text-align: center; color: var(--dim); font-size: .85rem; }
     var d = DAYS[cur], isDone = done.indexOf(cur) >= 0;
     $('day').innerHTML =
       '<div class="day-top"><div><p class="date">' + d.day + ' · ' + d.heb + '</p><h2>' + esc(d.theme) + '</h2></div><img src="../assets/' + d.img + '" alt=""></div>' +
+      (d.pic ? '<figure class="pic"><img src="../assets/' + d.pic + '" alt="רגע מתוך סרטון הדילמה של היום" loading="lazy"><figcaption>רגע מתוך הדילמה של היום</figcaption></figure>' : '') +
       '<section class="sec"><h3>מה למדנו היום</h3><p class="quote">' + esc(d.quote) + '<small>(' + esc(d.source) + ')</small></p><p>' + esc(d.learn) + '</p></section>' +
       '<section class="sec"><h3>הסיפור: ' + esc(d.story) + '</h3><p>' + esc(d.storyText) + '</p></section>' +
       '<section class="report" aria-labelledby="repTitle">' + (isDone

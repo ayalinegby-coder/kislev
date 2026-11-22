@@ -213,7 +213,7 @@ footer { text-align: center; color: var(--dim); font-size: .85rem; }
       '<div class="day-top"><div><p class="date">' + d.day + ' · ' + d.heb + '</p><h2>' + esc(d.theme) + '</h2></div><img src="../assets/' + d.img + '" alt=""></div>' +
       '<section class="sec"><h3>מה למדנו היום</h3><p class="quote">' + esc(d.quote) + '<small>(' + esc(d.source) + ')</small></p><p>' + esc(d.learn) + '</p></section>' +
       '<section class="sec"><h3>הסיפור: ' + esc(d.story) + '</h3><p>' + esc(d.storyText) + '</p></section>' +
-      '<section class="sec"><h3>שאלה לשיחה בבית</h3><p class="talk">' + esc(d.talk) + '</p><p>ואפשר לשאול גם: מה הכיתה בחרה היום בדילמה, ולמה?</p></section>' +
+      '<section class="sec"><h3>שאלה לשיחה בבית</h3><p class="talk">' + esc(d.talk) + '</p><p>ואפשר לשאול גם: מה היית עושה את בדילמה של היום, ולמה?</p></section>' +
       '<section class="sec"><h3>המשימה של היום</h3><div class="task">' + (d.task.length > 1 ? '<ul>' + d.task.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' : esc(d.task[0])) + '</div></section>' +
       '<section class="report" aria-labelledby="repTitle">' + (isDone
         ? '<div class="done"><strong>תודה, הדיווח התקבל ✓</strong><span>המורה תראה שהמשימה בוצעה.</span></div>'

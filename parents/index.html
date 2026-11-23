@@ -120,6 +120,38 @@ input:focus, textarea:focus { border-color: var(--flame); outline: none; }
 .cf { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 50; }
 @media (prefers-reduced-motion: reduce) { #day .day-top img { animation: none; } }
 .done strong { font-family: var(--display); font-weight: var(--dw); font-size: 1.3rem; color: #2f6b3a; }
+/* ===== Livelier entry, header and day tabs (2026-11-23): paper pop-up style ===== */
+.paper { background: radial-gradient(circle at 12px 12px, rgba(201, 151, 63, .16) 2px, transparent 2.5px) 0 0 / 26px 26px, var(--paper); }
+.head h1 { position: relative; display: inline-block; padding: 4px 26px 10px; color: var(--felt); text-shadow: none; transform: rotate(-1.5deg);
+  background: linear-gradient(135deg, #ffd76a, var(--flame)); border-radius: 12px; box-shadow: 0 5px 0 #a8641c, 0 14px 30px rgba(0, 0, 0, .35); }
+.head h1::before, .head h1::after { content: "✨"; position: absolute; top: -14px; font-size: 1.4rem; }
+.head h1::before { inset-inline-start: -14px; } .head h1::after { inset-inline-end: -12px; top: auto; bottom: -10px; }
+.head #intro { margin-top: 10px; }
+.who { margin-top: 6px; padding: 6px 14px; border-radius: 99px; background: var(--paper); color: var(--ink); box-shadow: 0 3px 0 var(--paper-2); }
+.head .who b, .head .who span { color: var(--felt); }
+.who .link { color: #b85d1c; }
+#login { border-radius: 22px; overflow: hidden; padding: 0 22px 24px; border-bottom: 0; box-shadow: 0 6px 0 #b85d1c, 0 30px 70px rgba(0, 0, 0, .6);
+  background: radial-gradient(circle at 12px 12px, rgba(201, 151, 63, .16) 2px, transparent 2.5px) 0 0 / 26px 26px, var(--paper); }
+#login h2 { position: relative; margin: 0 -22px 6px; padding: 18px 22px 26px; color: #fff; font-size: 1.9rem; text-shadow: 0 3px 0 rgba(0, 0, 0, .18);
+  background: radial-gradient(circle at 15% 20%, rgba(255, 255, 255, .25), transparent 40%), linear-gradient(135deg, #ef8a3c, #b85d1c); }
+#login h2::before { content: "🔑 "; }
+#login h2::after { content: ""; position: absolute; inset: auto 0 -1px 0; height: 18px; background: radial-gradient(circle at 10px -2px, transparent 12px, var(--paper) 12.5px) 0 0 / 20px 18px repeat-x; }
+#login input { border-radius: 12px; }
+#login .btn { border-radius: 14px; background: linear-gradient(135deg, #ef8a3c, #e0a12c); color: #fff; font-size: 1.1rem; padding: 12px 28px; box-shadow: 0 4px 0 #a8641c; }
+.days { gap: 10px; padding: 10px 4px 14px; }
+.days button { --c: #ef8a3c; position: relative; width: 88px; padding: 10px 4px 8px; border: 0; border-radius: 16px; color: var(--ink);
+  background: radial-gradient(circle at 8px 8px, rgba(201, 151, 63, .16) 1.5px, transparent 2px) 0 0 / 16px 16px, var(--paper);
+  border-top: 6px solid var(--c); box-shadow: 0 4px 0 var(--paper-2); transition: transform .2s; }
+.days button:nth-child(odd) { transform: rotate(-2deg); }
+.days button:nth-child(even) { transform: rotate(2deg); }
+.days button:hover:not([disabled]) { transform: translateY(-3px); }
+.days b { color: var(--c); }
+.days small { color: #6d6252; }
+.days button[aria-current="true"] { background: var(--c); border-top-color: var(--c); transform: translateY(-4px) scale(1.06); box-shadow: 0 6px 0 rgba(0, 0, 0, .25); }
+.days button[aria-current="true"] b, .days button[aria-current="true"] small { color: #fff; }
+.days button[disabled] { opacity: .5; filter: grayscale(.6); }
+.days button .tick { position: absolute; top: -8px; inset-inline-start: -6px; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: #3f8a52; color: #fff; font-size: .8rem; box-shadow: 0 2px 0 rgba(0, 0, 0, .2); }
+footer::before { content: "🏮 "; }
 .soon { text-align: center; color: var(--paper-2); }
 footer { text-align: center; color: var(--dim); font-size: .85rem; }
 </style>
@@ -233,19 +265,19 @@ footer { text-align: center; color: var(--dim); font-size: .85rem; }
     render();
   }
 
+  var HUES = [['#e0645a', '#a93a35'], ['#ef8a3c', '#b85d1c'], ['#d9708f', '#a3435f'], ['#3f9a8a', '#226b5f'], ['#4a86cc', '#2a5a96'], ['#9064c8', '#5f3c94']];
   function render() {
     var nav = $('days'); nav.textContent = '';
     DAYS.forEach(function (d, i) {
       var b = document.createElement('button'); b.type = 'button';
       var open = isOpen(d), isDone = done.indexOf(i) >= 0;
-      b.disabled = !open; b.setAttribute('aria-current', i === cur ? 'true' : 'false');
+      b.style.setProperty('--c', HUES[i][0]); b.disabled = !open; b.setAttribute('aria-current', i === cur ? 'true' : 'false');
       b.innerHTML = '<img src="../assets/' + d.img + '" alt=""><b>' + d.day + '</b><small>' + d.heb + (isDone ? ' <span class="tick">✓</span>' : '') + '</small>';
       b.setAttribute('aria-label', d.day + ', ' + d.heb + (open ? (isDone ? ', דווח' : '') : ', עוד לא נפתח'));
       b.addEventListener('click', function () { cur = i; render(); });
       nav.appendChild(b);
     });
     var d = DAYS[cur], isDone = done.indexOf(cur) >= 0;
-    var HUES = [['#e0645a', '#a93a35'], ['#ef8a3c', '#b85d1c'], ['#d9708f', '#a3435f'], ['#3f9a8a', '#226b5f'], ['#4a86cc', '#2a5a96'], ['#9064c8', '#5f3c94']];
     $('day').style.setProperty('--c', HUES[cur][0]); $('day').style.setProperty('--c-d', HUES[cur][1]);
     $('day').innerHTML =
       '<div class="day-top"><div><p class="date">' + d.day + ' · ' + d.heb + '</p><h2>' + esc(d.theme) + '</h2></div><img src="../assets/' + d.img + '" alt=""></div>' +

@@ -158,6 +158,52 @@ dialog.prep[open] .prep-in { animation: dawn .9s ease both; }
 .pd-tally { color: #5d5470; font-size: .95rem; }
 .pd-locked { padding: 14px; background: #efe4cc; color: #6d6252; text-align: center; }
 .pd-key { padding: 10px 14px; background: #fff4d6; border-inline-start: 4px solid var(--flame); }
+/* ===== Livelier day card (2026-11-23): a colour per day, steps as playful stations ===== */
+.pd-card { --c: #e8873a; --c-d: #b85d1c; border-radius: 22px; overflow: hidden; padding: 0 0 26px; gap: 20px; border-bottom: 0;
+  background: radial-gradient(circle at 12px 12px, rgba(201, 151, 63, .16) 2px, transparent 2.5px) 0 0 / 26px 26px, var(--paper);
+  box-shadow: 0 6px 0 var(--c-d), 0 30px 70px rgba(0, 0, 0, .6); }
+.pd-card > header { position: relative; display: grid; gap: 4px; padding: 26px 30px 30px; padding-inline-end: 170px; color: #fff;
+  background: radial-gradient(circle at 85% 20%, rgba(255, 255, 255, .25), transparent 40%), linear-gradient(135deg, var(--c), var(--c-d)); }
+.pd-card > header::after { content: ""; position: absolute; inset: auto 0 -1px 0; height: 18px; background: radial-gradient(circle at 10px -2px, transparent 12px, var(--paper) 12.5px) 0 0 / 20px 18px repeat-x; }
+.pd-card .pd-date { justify-self: start; padding: 2px 14px 3px; border-radius: 99px; background: rgba(255, 255, 255, .92); color: var(--c-d); font-weight: 700; }
+.pd-card .pd-title { color: #fff; font-size: clamp(2rem, 4.4vw, 2.9rem); text-shadow: 0 3px 0 rgba(0, 0, 0, .18); }
+.pd-icon { position: absolute; inset-inline-end: 22px; top: 50%; width: 140px; translate: 0 -50%; filter: drop-shadow(0 8px 10px rgba(0, 0, 0, .3)); animation: pd-bob 3.2s ease-in-out infinite; }
+@keyframes pd-bob { 50% { transform: translateY(-8px) rotate(-3deg); } }
+.pd-card .pd-steps { padding: 0 26px; gap: 18px; }
+.pd-card .pd-step { --s: #e76f51; --s2: #fde7df; grid-template-columns: 56px minmax(0, 1fr); gap: 14px; padding: 16px 18px; border-radius: 18px; background: #fffdf7; border: 2px solid var(--s2); box-shadow: 0 4px 0 var(--s2); transition: transform .2s, box-shadow .2s; }
+.pd-card .pd-step:hover { transform: translateY(-3px) rotate(-.3deg); box-shadow: 0 7px 0 var(--s2); }
+.pd-card .pd-step:nth-child(2) { --s: #5d9a4b; --s2: #e2f0d8; }
+.pd-card .pd-step:nth-child(3) { --s: #7b5cc4; --s2: #ebe3fa; }
+.pd-card .pd-step:nth-child(4) { --s: #e0a12c; --s2: #fbefcf; }
+.pd-card .pd-step::before { content: "🎬"; width: 52px; height: 52px; border-radius: 16px; background: var(--s); font-size: 1.7rem; box-shadow: 0 3px 0 rgba(0, 0, 0, .15); transform: rotate(-6deg); }
+.pd-card .pd-step:nth-child(2)::before { content: "📖"; transform: rotate(5deg); }
+.pd-card .pd-step:nth-child(3)::before { content: "🔍"; }
+.pd-card .pd-step:nth-child(4)::before { content: "⭐"; transform: rotate(5deg); }
+.pd-card .pd-step h4 { font-family: var(--hand); font-weight: 400; font-size: 1.75rem; line-height: 1.1; color: var(--s); }
+.pd-card .pill { font-size: .85rem; padding: 2px 12px 3px; }
+.pd-card .slot { border-radius: 14px; overflow: hidden; box-shadow: 0 6px 16px rgba(0, 0, 0, .18); }
+.pd-card .pd-key { border-radius: 12px; border: 2px dashed var(--flame); border-inline-start-width: 2px; background: #fff7df; }
+.pd-card .pd-key::before { content: "✨ "; }
+.pd-card .pd-cheer { border-radius: 16px; border: 2px solid #f3cf6b; background: linear-gradient(135deg, #fff8dc, #ffeec2); }
+.pd-card .pd-cheer > p::before { content: "🎉 "; }
+.pd-card .pd-names li { --n: #e76f51; border: 0; color: #fff; background: var(--n); border-radius: 10px; box-shadow: 0 2px 0 rgba(0, 0, 0, .15); animation: pd-pop .45s cubic-bezier(.3, 1.6, .5, 1) both; animation-delay: calc(var(--i, 0) * 60ms); }
+.pd-card .pd-names li:nth-child(5n+2) { --n: #5d9a4b; }
+.pd-card .pd-names li:nth-child(5n+3) { --n: #7b5cc4; }
+.pd-card .pd-names li:nth-child(5n+4) { --n: #3f7fc4; }
+.pd-card .pd-names li:nth-child(5n+5) { --n: #d9902a; }
+.pd-card .pd-names li .pd-unsign { color: #fff; }
+@keyframes pd-pop { from { transform: scale(0) rotate(-12deg); opacity: 0; } }
+@media (max-width: 640px) {
+  .pd-card > header { padding: 20px 18px 26px; padding-inline-end: 104px; }
+  .pd-icon { width: 92px; inset-inline-end: 10px; }
+  .pd-card .pd-steps { padding: 0 12px; }
+  .pd-card .pd-step { grid-template-columns: minmax(0, 1fr); padding: 14px; }
+  .pd-card .pd-step::before { width: 44px; height: 44px; font-size: 1.4rem; position: absolute; }
+  .pd-card .pd-step { position: relative; }
+  .pd-card .pd-step > div > h4 { padding-inline-start: 54px; min-height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) { .pd-icon, .pd-card .pd-names li { animation: none; } .pd-card .pd-step:hover { transform: none; } }
+
 
 .secret { background: rgba(21, 26, 54, .75); border: 1px solid #333a5e; padding: 26px 24px; display: grid; gap: 14px; justify-items: center; text-align: center; }
 .secret h3 { margin: 0; font-family: var(--display); font-weight: var(--dw); font-size: 1.7rem; color: var(--flame); }
@@ -319,6 +365,17 @@ dialog.mq[open] .mq-card { animation: rise .6s cubic-bezier(.2, .9, .3, 1.05); t
 .mq-foot .btn.quiet { color: var(--felt); box-shadow: inset 0 0 0 1.5px var(--felt); }
 .mq-done { text-align: center; display: grid; gap: 10px; justify-items: center; }
 .mq-done .big { font-size: 4rem; line-height: 1; }
+.mq-card { border-radius: 22px; border-bottom: 0; border-top: 14px solid #ef8a3c; box-shadow: 0 6px 0 #b85d1c, 0 30px 70px rgba(0, 0, 0, .7);
+  background: radial-gradient(circle at 12px 12px, rgba(201, 151, 63, .16) 2px, transparent 2.5px) 0 0 / 26px 26px, var(--paper); }
+.mq-step::before { content: "🧠 "; }
+.mq-bar i { background: linear-gradient(90deg, #ef8a3c, #f0b23c); }
+.mq-opt { border-radius: 16px; box-shadow: 0 3px 0 #e6d6b3; }
+.mq-opt b { border-radius: 12px; background: #e76f51; transform: rotate(-5deg); }
+.mq-opt:nth-child(2) b { background: #5d9a4b; transform: rotate(4deg); }
+.mq-opt:nth-child(3) b { background: #7b5cc4; }
+.mq-opt:nth-child(4) b { background: #e0a12c; transform: rotate(4deg); }
+.mq-opt.ok b { background: #3f8a52; } .mq-opt.no b { background: #c0614a; }
+.mq-opts .mq-opt.ok b { background: #3f8a52; } .mq-opts .mq-opt.no b { background: #c0614a; }
 .mq-confetti { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 2; }
 @media (max-width: 640px) { .mq-card { padding: 24px 18px 20px; } .mq-opt { font-size: 1rem; } }
 @media (prefers-reduced-motion: reduce) { .mq-opt.no { animation: none; } dialog.mq[open] .mq-card { animation: none; } }
@@ -737,6 +794,7 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
   var cv = document.getElementById('mqConfetti'), cx = cv.getContext('2d'), bits = [], cRaf = 0;
   function confetti(n) {
     if (reduced) return;
+    var host = [].slice.call(document.querySelectorAll('dialog[open]')).pop(); if (host && cv.parentNode !== host) host.appendChild(cv);
     var w = cv.width = innerWidth, h = cv.height = innerHeight, cols = ['#f0b23c', '#c9973f', '#1c234b', '#6f7c4e', '#f1e6cf', '#c0614a'];
     for (var i = 0; i < n; i++) bits.push({ x: w / 2 + (Math.random() - .5) * w * .3, y: h * .45, vx: (Math.random() - .5) * 16, vy: -Math.random() * 15 - 5, r: Math.random() * 6.28, vr: (Math.random() - .5) * .35, s: 6 + Math.random() * 7, c: cols[i % cols.length], t: 0 });
     if (!cRaf) cRaf = requestAnimationFrame(cStep);
@@ -962,7 +1020,7 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
     var n = names.length, html = '<div class="pd-cheer">';
     if (n) {
       html += '<p>' + (n === 1 ? 'אתמול דיווחה בכיתה שלנו <b>בת אחת</b>! יישר כוח ל:' : 'אתמול דיווחו בכיתה שלנו <b>' + n + '</b> בנות! יישר כוח ל:') + '</p><ul class="pd-names">' +
-        names.map(function (x) { return '<li>' + esc(x) + (signed.indexOf(x) >= 0 ? '<button type="button" class="pd-unsign" data-name="' + esc(x) + '" aria-label="להסיר את ' + esc(x) + '">×</button>' : '') + '</li>'; }).join('') + '</ul>';
+        names.map(function (x, k) { return '<li style="--i:' + k + '">' + esc(x) + (signed.indexOf(x) >= 0 ? '<button type="button" class="pd-unsign" data-name="' + esc(x) + '" aria-label="להסיר את ' + esc(x) + '">×</button>' : '') + '</li>'; }).join('') + '</ul>';
     }
     html += '<form class="pd-sign" data-d="' + d + '"><label for="signName">הביאו חתימה בחוברת? הוסיפי את שמן:</label><div><input id="signName" maxlength="40" placeholder="שם התלמידה" autocomplete="off"><button type="submit">הוספה</button></div></form></div>';
     return html;
@@ -1027,16 +1085,18 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
     return n;
   }
   function cnt(n) { return n === 1 ? 'כיתה אחת' : n + ' כיתות'; }
+  var DAY_HUES = [['#e0645a', '#a93a35'], ['#ef8a3c', '#b85d1c'], ['#3f9a8a', '#226b5f'], ['#4a86cc', '#2a5a96'], ['#9064c8', '#5f3c94']];
   function renderPrep() {
     renderTrail();
     var p = PREP[prepCur]; if (!p) { prepDayEl.textContent = ''; return; }
     var mine = (prepState().votes || [])[prepCur] || '', n = tally(prepCur);
-    prepDayEl.innerHTML = '<article class="pd-card"><header><p class="pd-date">' + p.day + ' · ' + p.dateText + '</p><h3 class="pd-title">' + esc(p.theme) + '</h3></header><ol class="pd-steps">' +
+    prepDayEl.innerHTML = '<article class="pd-card" style="--c:' + DAY_HUES[prepCur][0] + ';--c-d:' + DAY_HUES[prepCur][1] + '"><header><img class="pd-icon" src="assets/' + p.pop + '" alt=""><p class="pd-date">' + p.day + ' · ' + p.dateText + '</p><h3 class="pd-title">' + esc(p.theme) + '</h3></header><ol class="pd-steps">' +
       '<li class="pd-step"><div><h4>הדילמה <span class="pill site">באתר</span></h4>' + slot(p.dilemma, 'כאן ייכנס סרטון הדילמה', p.dilemmaPoster) + '</div></li>' +
       '<li class="pd-step"><div><h4>עכשיו לחוברת <span class="pill bk">בחוברת</span></h4><p>פותחות את החוברת ב' + p.day + ': ' + esc(p.book) + '</p><p class="pd-key">האות המאירה של היום מתחבאת בסרטון הדילמה. מצאתן? כתבו אותה במשבצת ״האות המאירה שמצאנו היום״ בחוברת.</p></div></li>' +
       '<li class="pd-step"><div><h4>מה קרה בסוף? <span class="pill site">באתר</span></h4>' + slot(p.ending, 'כאן ייכנס סרטון ההמשך', p.endingPoster) + '</div></li>' +
       '<li class="pd-step"><div><h4>המשימה <span class="pill kind">' + esc(p.kind) + '</span></h4><p>' + esc(p.task) + '</p>' + cheer(p) + '</div></li>' +
       '</ol></article>';
+    var vids = prepDayEl.querySelectorAll('video'); if (vids[1]) vids[1].addEventListener('ended', function () { confetti(180); });
     renderSecret();
   }
   function renderSecret() {

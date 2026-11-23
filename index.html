@@ -293,6 +293,35 @@ a.btn { display: inline-block; text-decoration: none; }
 /* ---------- Book dialog ---------- */
 dialog { border: 0; padding: 0; background: none; color: var(--ink); width: min(1000px, calc(100vw - 32px)); max-height: 92vh; overflow: visible; }
 dialog::backdrop { background: rgba(5, 6, 14, .78); }
+/* Short story quiz (י״ד כסלו): one question at a time, instant feedback. */
+dialog.mq { width: min(760px, calc(100vw - 32px)); }
+.mq-card { position: relative; display: grid; gap: 16px; padding: 30px 34px 26px; background: var(--paper); border-bottom: 10px solid var(--moss-deep); box-shadow: 0 2px 0 var(--paper-2), 0 5px 0 #cdbb97, 0 30px 70px rgba(0, 0, 0, .7); max-height: 92vh; overflow: auto; }
+dialog.mq[open] .mq-card { animation: rise .6s cubic-bezier(.2, .9, .3, 1.05); transform-origin: 50% 100%; }
+.mq-step { margin: 0; color: #8a4a1f; font-weight: 700; }
+.mq-bar { height: 8px; border-radius: 99px; background: #e3d5b6; overflow: hidden; }
+.mq-bar i { display: block; height: 100%; width: 0; background: var(--gold); border-radius: inherit; transition: width .4s; }
+.mq-q { margin: 0; font-family: var(--display); font-weight: var(--dw); font-size: clamp(1.5rem, 3.4vw, 2.1rem); line-height: 1.25; color: var(--felt); }
+.mq-opts { display: grid; gap: 10px; }
+.mq-opt { display: flex; align-items: center; gap: 12px; width: 100%; text-align: start; padding: 12px 14px; border: 2px solid #d6c39c; border-radius: 12px; background: #fffaf0; color: var(--ink); font: inherit; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: transform .15s, border-color .15s, background .15s; }
+.mq-opt:hover:not(:disabled) { border-color: var(--gold); transform: translateY(-1px); }
+.mq-opt b { flex: none; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--felt); color: var(--paper); font-family: var(--display); font-weight: var(--dw); }
+.mq-opt.ok { border-color: #3f8a52; background: #e6f4e3; }
+.mq-opt.ok b { background: #3f8a52; }
+.mq-opt.ok::after { content: "✓"; margin-inline-start: auto; color: #3f8a52; font-size: 1.6rem; font-weight: 700; }
+.mq-opt.no { border-color: #c0614a; background: #fbe9e3; color: #8b4a3a; animation: mq-shake .4s; }
+.mq-opt.no b { background: #c0614a; }
+.mq-opt:disabled { cursor: default; }
+@keyframes mq-shake { 20%, 60% { transform: translateX(-7px); } 40%, 80% { transform: translateX(7px); } }
+.mq-msg { margin: 0; min-height: 1.6em; font-family: var(--display); font-weight: var(--dw); font-size: 1.4rem; text-align: center; }
+.mq-msg.ok { color: #3f8a52; }
+.mq-msg.no { color: #c0614a; }
+.mq-foot { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+.mq-foot .btn.quiet { color: var(--felt); box-shadow: inset 0 0 0 1.5px var(--felt); }
+.mq-done { text-align: center; display: grid; gap: 10px; justify-items: center; }
+.mq-done .big { font-size: 4rem; line-height: 1; }
+.mq-confetti { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 2; }
+@media (max-width: 640px) { .mq-card { padding: 24px 18px 20px; } .mq-opt { font-size: 1rem; } }
+@media (prefers-reduced-motion: reduce) { .mq-opt.no { animation: none; } dialog.mq[open] .mq-card { animation: none; } }
 dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transform-origin: 50% 100%; }
 @keyframes rise { from { transform: perspective(1400px) rotateX(58deg) scale(.86); opacity: 0; } }
 .book {
@@ -446,7 +475,7 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
       <div class="page">
         <h3>התוכנית להיום</h3>
         <p id="dProgram"></p>
-        <p class="quiz-row" id="dQuiz" hidden><a class="btn" id="dQuizLink" href="quiz/" target="_blank" rel="noopener">לחידון הברקודים על הסיפור</a></p>
+        <p class="quiz-row" id="dQuiz" hidden><button class="btn" id="dQuizBtn" type="button">צפיתן בוידאו? בואו נראה מה אתן זוכרות</button></p>
         <div class="added">
           <h3>הוספנו באור</h3>
           <label for="dNote">ההחלטה הטובה של הכיתה להיום</label>
@@ -459,6 +488,19 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
         </div>
       </div>
     </div>
+  </dialog>
+
+  <dialog class="mq" id="mqDlg" aria-labelledby="mqTitle">
+    <div class="mq-card">
+      <button class="close" id="mqClose" type="button" aria-label="סגירה">×</button>
+      <p class="mq-step" id="mqStep"></p>
+      <div class="mq-bar" aria-hidden="true"><i id="mqBar"></i></div>
+      <h2 class="mq-q" id="mqTitle"></h2>
+      <div class="mq-opts" id="mqOpts"></div>
+      <p class="mq-msg" id="mqMsg" aria-live="polite"></p>
+      <div class="mq-foot"><button class="btn" id="mqNext" type="button" hidden>לשאלה הבאה ←</button></div>
+    </div>
+    <canvas class="mq-confetti" id="mqConfetti" aria-hidden="true"></canvas>
   </dialog>
 
   <dialog class="prep" id="prepDlg" aria-labelledby="prepTitle">
@@ -507,7 +549,7 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
   var DAYS = [
     { word: 'אור וחיות', date: 'א׳ כסלו', about: '', program: 'לחיים לחיים!\nהיום הבהיר ראש חודש כסלו, בו הרבי יצא לחסידים לאחר תקופה ארוכה וקשה.\nנצפה יחד בסרטון על סיפור הנס,\nנחפש בדף שלנו איורים שנשמעים בסרטון ונסמן אותם אצלנו.\nבהצלחה!', video: 'assets/a-kislev.mp4', poster: 'assets/a-kislev-poster.jpg', song: 'assets/song-a.mp3', x: .876, y: .37, w: .06, light: [.876, .66, .19], opens: '2026-11-10', lights: '2026-11-11', opensText: 'יום שלישי, ל׳ חשון', lightsText: 'יום רביעי, א׳ כסלו' },
     { word: 'נפשנו', date: 'ט׳–י׳ כסלו', about: 'יום ההולדת ויום ההסתלקות של אדמו״ר האמצעי, ויום גאולתו ממאסר.', program: 'ברוכות הבאות להתוועדות החגיגית לכבוד ט׳-י׳ כסלו, יום הולדתו והסתלקותו וחג הגאולה של אדמו״ר האמצעי!\nמוזמנות להתוועד בליווי המצגת.', slides: 'https://www.canva.com/design/DAHbAgMLhMU/_OTg2P3U7BN89DvfJU5JXQ/view', song: 'assets/song-b.mp3', x: .625, y: .30, w: .06, light: [.625, .55, .165], opens: '2026-11-18', lights: '2026-11-19', opensText: 'יום רביעי, ח׳ כסלו', lightsText: 'יום חמישי, ט׳ כסלו' },
-    { word: 'ניתן', date: 'י״ד כסלו', about: 'יום נישואי הרבי והרבנית.', quiz: 'quiz/', video: 'assets/yud-kislev.mp4', poster: 'assets/yud-kislev-poster.jpg', song: 'assets/song-c.mp3', x: .365, y: .215, w: .06, light: [.365, .46, .165], opens: '2026-11-23', lights: '2026-11-24', opensText: 'יום שני, י״ג כסלו', lightsText: 'יום שלישי, י״ד כסלו' },
+    { word: 'ניתן', date: 'י״ד כסלו', about: 'יום נישואי הרבי והרבנית.', quiz: true, video: 'assets/yud-kislev.mp4', poster: 'assets/yud-kislev-poster.jpg', song: 'assets/song-c.mp3', x: .365, y: .215, w: .06, light: [.365, .46, .165], opens: '2026-11-23', lights: '2026-11-24', opensText: 'יום שני, י״ג כסלו', lightsText: 'יום שלישי, י״ד כסלו' },
     { word: 'לנו', date: 'י״ט כסלו', about: 'ראש השנה לחסידות, יום גאולת אדמו״ר הזקן ממאסר. שבוע ההכנה מוביל אל היום הזה.', song: 'assets/song-d.mp3', x: .245, y: .125, w: .071, light: [.165, .36, .2], opens: '2026-11-27', lights: '2026-11-29', opensText: 'יום שישי, י״ז כסלו', lightsText: 'יום ראשון, י״ט כסלו' }
   ];
   var stage = document.getElementById('stage'), dark = document.getElementById('dark'), dctx = dark.getContext('2d');
@@ -614,7 +656,7 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
     document.getElementById('dWord').textContent = d.word;
     var about = document.getElementById('dAbout'); about.textContent = d.about; about.hidden = !d.about;
     var prog = document.getElementById('dProgram'); prog.textContent = d.program || ''; prog.hidden = !d.program;
-    var qz = document.getElementById('dQuiz'); qz.hidden = !d.quiz; if (d.quiz) document.getElementById('dQuizLink').href = d.quiz;
+    var qz = document.getElementById('dQuiz'); qz.hidden = !d.quiz;
     var slot = document.getElementById('dSlot'); slot.textContent = ''; var oldLink = slot.parentNode.querySelector('.slides-link'); if (oldLink) oldLink.remove();
     if (d.video) {
       var v = document.createElement('video'); v.controls = true; v.preload = 'metadata'; v.playsInline = true; v.src = d.video; v.poster = d.poster;
@@ -635,6 +677,81 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
   dlg.addEventListener('close', function () { flushNote(); song.pause(); var v = dlg.querySelector('video'); if (v) v.pause(); });
   document.getElementById('dLater').addEventListener('click', function () { dlg.close(); });
   document.getElementById('dClose').addEventListener('click', function () { dlg.close(); });
+
+  // Short quiz on the י״ד כסלו story video (questions approved 16.11.2026).
+  var MQ = [
+    { q: 'לאיזו עיר נסעו אברמ׳ל ובער׳ל לחתונת בת הרבי?', o: ['ורשה', 'ליובאוויטש', 'ריגה', 'מוסקבה'], a: 0 },
+    { q: 'למה התאספו כל כך הרבה אנשים בתחנת הרכבת?', o: ['כדי לקבל את פני אברמ׳ל ובער׳ל', 'כי הרבי הריי״צ, אבי הכלה, הגיע ברכבת', 'כי הרכבת התעכבה', 'כדי לקנות כרטיסים לחתונה'], a: 1 },
+    { q: 'מי היה החתן?', o: ['בנו של רב העיר ורשה', 'בנו של הרבי הריי״צ', 'הבן של רבי לוי יצחק, הרב של יקטרינוסלב', 'חתן שהגיע מאמריקה'], a: 2 },
+    { q: 'מה ראה אברמ׳ל דרך החלון?', o: ['את החתן מתכונן לחופה', 'את הרבי הריי״צ מברך את ברכות החופה', 'את אמא שלו מחפשת אותו', 'את התמימים רוקדים במעגל והרבי הריי״צ באמצע'], a: 3 },
+    { q: 'כשאברמ׳ל שמע את הרבי הריי״צ מברך את ברכות החופה, למה זה הזכיר לו?', o: ['מעמד הר סיני', 'ליל הסדר', 'שמחת תורה', 'יום ההולדת שלו'], a: 0 },
+    { q: 'למה הורי החתן לא הגיעו לחתונה?', o: ['הם היו חולים', 'הם היו מאחורי ״מסך הברזל״ ולא יכלו לצאת מרוסיה', 'הרכבת שלהם התעכבה', 'הם לא ידעו על החתונה'], a: 1 },
+    { q: 'מה מיוחד ביום י״ד כסלו?', o: ['זה היום שבו נולד הרבי', 'זה היום שבו חזרו הביתה', 'זה היום שבו נעשינו כולנו קשורים לחתן, הרבי', 'זה היום שבו הרבי הגיע לוורשה'], a: 2 }
+  ];
+  var mqDlg = document.getElementById('mqDlg'), mqOpts = document.getElementById('mqOpts'), mqMsg = document.getElementById('mqMsg'), mqNext = document.getElementById('mqNext'), mqI = 0;
+  var mqCard = mqDlg.querySelector('.mq-card'), mqKeep = mqCard.innerHTML;
+  function mqShow() {
+    var Q = MQ[mqI];
+    document.getElementById('mqStep').textContent = 'שאלה ' + (mqI + 1) + ' מתוך ' + MQ.length;
+    document.getElementById('mqBar').style.width = (mqI / MQ.length * 100) + '%';
+    document.getElementById('mqTitle').textContent = Q.q;
+    mqMsg.textContent = ''; mqMsg.className = 'mq-msg'; mqNext.hidden = true;
+    mqOpts.innerHTML = '';
+    Q.o.forEach(function (t, k) {
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'mq-opt';
+      b.innerHTML = '<b>' + 'אבגד'[k] + '</b><span></span>'; b.lastChild.textContent = t;
+      b.addEventListener('click', function () { mqPick(b, k); });
+      mqOpts.appendChild(b);
+    });
+  }
+  function mqPick(b, k) {
+    if (k === MQ[mqI].a) {
+      b.classList.add('ok'); mqOpts.querySelectorAll('.mq-opt').forEach(function (x) { x.disabled = true; });
+      mqMsg.textContent = 'נכון! כל הכבוד'; mqMsg.className = 'mq-msg ok';
+      mqNext.textContent = mqI + 1 < MQ.length ? 'לשאלה הבאה ←' : 'לסיום ←'; mqNext.hidden = false; mqNext.focus();
+      confetti(70);
+    } else {
+      b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); b.disabled = true;
+      mqMsg.textContent = 'נסו שוב'; mqMsg.className = 'mq-msg no';
+    }
+  }
+  function mqEnd() {
+    mqCard.innerHTML = '<button class="close" type="button" aria-label="סגירה" data-mq-close>×</button><div class="mq-done"><div class="big" aria-hidden="true">🎉</div><h2 class="mq-q" id="mqTitle">כל הכבוד! סיימתן את כל ' + MQ.length + ' השאלות</h2><p>אתן באמת זוכרות את הסיפור של י״ד כסלו.</p><div class="mq-foot"><button class="btn" type="button" data-mq-again>שוב מההתחלה</button><button class="btn quiet" type="button" data-mq-close>סגירה</button></div></div>';
+    confetti(220);
+  }
+  function mqStart() {
+    mqCard.innerHTML = mqKeep; mqOpts = document.getElementById('mqOpts'); mqMsg = document.getElementById('mqMsg'); mqNext = document.getElementById('mqNext');
+    mqNext.addEventListener('click', function () { mqI++; if (mqI < MQ.length) mqShow(); else mqEnd(); });
+    document.getElementById('mqClose').addEventListener('click', function () { mqDlg.close(); });
+    mqI = 0; mqShow();
+  }
+  mqCard.addEventListener('click', function (e) {
+    if (e.target.closest('[data-mq-close]')) mqDlg.close();
+    if (e.target.closest('[data-mq-again]')) mqStart();
+  });
+  document.getElementById('dQuizBtn').addEventListener('click', function () {
+    song.pause(); var v = dlg.querySelector('video'); if (v) v.pause();
+    mqStart(); mqDlg.showModal();
+  });
+  // Confetti in the site's colours, drawn on a canvas above the quiz.
+  var cv = document.getElementById('mqConfetti'), cx = cv.getContext('2d'), bits = [], cRaf = 0;
+  function confetti(n) {
+    if (reduced) return;
+    var w = cv.width = innerWidth, h = cv.height = innerHeight, cols = ['#f0b23c', '#c9973f', '#1c234b', '#6f7c4e', '#f1e6cf', '#c0614a'];
+    for (var i = 0; i < n; i++) bits.push({ x: w / 2 + (Math.random() - .5) * w * .3, y: h * .45, vx: (Math.random() - .5) * 16, vy: -Math.random() * 15 - 5, r: Math.random() * 6.28, vr: (Math.random() - .5) * .35, s: 6 + Math.random() * 7, c: cols[i % cols.length], t: 0 });
+    if (!cRaf) cRaf = requestAnimationFrame(cStep);
+  }
+  function cStep() {
+    cx.clearRect(0, 0, cv.width, cv.height);
+    bits = bits.filter(function (b) { return b.t < 150 && b.y < cv.height + 40; });
+    bits.forEach(function (b) {
+      b.t++; b.vy += .45; b.vx *= .985; b.x += b.vx; b.y += b.vy; b.r += b.vr;
+      cx.save(); cx.translate(b.x, b.y); cx.rotate(b.r); cx.globalAlpha = Math.min(1, (150 - b.t) / 30);
+      cx.fillStyle = b.c; cx.fillRect(-b.s / 2, -b.s / 4, b.s, b.s / 2); cx.restore();
+    });
+    cRaf = bits.length ? requestAnimationFrame(cStep) : 0;
+  }
+  mqDlg.addEventListener('close', function () { bits = []; cx.clearRect(0, 0, cv.width, cv.height); });
   dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
 
   // Each class has its own board, kept in the shared Google Sheet so every device sees the same thing. This browser keeps a copy for a fast start and for moments without a connection.

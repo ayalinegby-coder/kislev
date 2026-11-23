@@ -91,6 +91,34 @@ input:focus, textarea:focus { border-color: var(--flame); outline: none; }
 .report { display: grid; gap: 10px; padding-top: 6px; border-top: 2px dashed #d9c7a0; }
 .report h3 { margin: 0; font-family: var(--display); font-weight: var(--dw); font-size: 1.15rem; color: var(--felt); }
 .done { display: grid; gap: 6px; justify-items: center; text-align: center; padding: 16px; background: #edf6ee; border: 2px solid #9cc9a3; }
+/* ===== Livelier day card (2026-11-23), same language as the teachers' site ===== */
+#day { --c: #ef8a3c; --c-d: #b85d1c; border-radius: 22px; overflow: hidden; padding: 0 0 24px; gap: 16px; border-bottom: 0;
+  background: radial-gradient(circle at 12px 12px, rgba(201, 151, 63, .16) 2px, transparent 2.5px) 0 0 / 26px 26px, var(--paper);
+  box-shadow: 0 6px 0 var(--c-d), 0 30px 70px rgba(0, 0, 0, .6); }
+#day > * { margin-inline: 16px; }
+#day > .day-top { position: relative; margin: 0; padding: 20px 18px 28px; color: #fff;
+  background: radial-gradient(circle at 15% 20%, rgba(255, 255, 255, .25), transparent 40%), linear-gradient(135deg, var(--c), var(--c-d)); }
+#day > .day-top::after { content: ""; position: absolute; inset: auto 0 -1px 0; height: 18px; background: radial-gradient(circle at 10px -2px, transparent 12px, var(--paper) 12.5px) 0 0 / 20px 18px repeat-x; }
+#day .day-top .date { display: inline-block; padding: 2px 12px 3px; border-radius: 99px; background: rgba(255, 255, 255, .92); color: var(--c-d); }
+#day .day-top h2 { color: #fff; font-size: 1.9rem; margin-top: 6px; text-shadow: 0 3px 0 rgba(0, 0, 0, .18); }
+#day .day-top img { width: 96px; height: 90px; filter: drop-shadow(0 6px 8px rgba(0, 0, 0, .3)); animation: pd-bob 3.2s ease-in-out infinite; }
+@keyframes pd-bob { 50% { transform: translateY(-6px) rotate(-3deg); } }
+#day .pic img { border-radius: 14px; }
+#day .sec, #day .report { --s: #5d9a4b; --s2: #e2f0d8; position: relative; padding: 14px 16px 16px; border-radius: 18px; background: #fffdf7; border: 2px solid var(--s2); box-shadow: 0 4px 0 var(--s2); }
+#day .sec + .sec { --s: #7b5cc4; --s2: #ebe3fa; }
+#day .report { --s: #e0a12c; --s2: #fbefcf; }
+#day .sec h3, #day .report h3 { display: flex; align-items: center; gap: 10px; font-family: var(--hand); font-weight: 400; font-size: 1.6rem; line-height: 1.15; color: var(--s); }
+#day .sec h3::before, #day .report h3::before { content: "📖"; flex: none; display: grid; place-items: center; width: 42px; height: 42px; border-radius: 13px; background: var(--s); font-size: 1.3rem; transform: rotate(-6deg); box-shadow: 0 3px 0 rgba(0, 0, 0, .15); }
+#day .sec + .sec h3::before { content: "📚"; transform: rotate(5deg); }
+#day .report h3::before { content: "⭐"; }
+#day .quote { border-radius: 12px; border-inline-start-width: 4px; }
+#day .todo textarea, #day input { border-radius: 12px; }
+#day .btn { border-radius: 14px; background: linear-gradient(135deg, #ef8a3c, #e0a12c); color: #fff; font-size: 1.1rem; padding: 12px 24px; box-shadow: 0 4px 0 #a8641c; }
+#day .btn:hover { transform: translateY(1px); box-shadow: 0 3px 0 #a8641c; }
+#day .done { border-radius: 16px; background: linear-gradient(135deg, #eaf7e8, #d9f0d4); }
+#day .done strong::before { content: "🎉 "; }
+.cf { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 50; }
+@media (prefers-reduced-motion: reduce) { #day .day-top img { animation: none; } }
 .done strong { font-family: var(--display); font-weight: var(--dw); font-size: 1.3rem; color: #2f6b3a; }
 .soon { text-align: center; color: var(--paper-2); }
 footer { text-align: center; color: var(--dim); font-size: .85rem; }
@@ -217,6 +245,8 @@ footer { text-align: center; color: var(--dim); font-size: .85rem; }
       nav.appendChild(b);
     });
     var d = DAYS[cur], isDone = done.indexOf(cur) >= 0;
+    var HUES = [['#e0645a', '#a93a35'], ['#ef8a3c', '#b85d1c'], ['#d9708f', '#a3435f'], ['#3f9a8a', '#226b5f'], ['#4a86cc', '#2a5a96'], ['#9064c8', '#5f3c94']];
+    $('day').style.setProperty('--c', HUES[cur][0]); $('day').style.setProperty('--c-d', HUES[cur][1]);
     $('day').innerHTML =
       '<div class="day-top"><div><p class="date">' + d.day + ' · ' + d.heb + '</p><h2>' + esc(d.theme) + '</h2></div><img src="../assets/' + d.img + '" alt=""></div>' +
       (d.pic ? '<figure class="pic"><img src="../assets/' + d.pic + '" alt="רגע מתוך סרטון הדילמה של היום" loading="lazy"><figcaption>רגע מתוך הדילמה של היום</figcaption></figure>' : '') +
@@ -231,6 +261,20 @@ footer { text-align: center; color: var(--dim); font-size: .85rem; }
     var send = $('send'); if (send) send.addEventListener('click', report);
   }
 
+  // Confetti in the site's colours when a report is received.
+  function confetti() {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var cv = document.createElement('canvas'); cv.className = 'cf'; document.body.appendChild(cv);
+    var cx = cv.getContext('2d'), w = cv.width = innerWidth, h = cv.height = innerHeight, cols = ['#f0b23c', '#c9973f', '#1c234b', '#5d9a4b', '#7b5cc4', '#e76f51'], bits = [];
+    for (var i = 0; i < 160; i++) bits.push({ x: w / 2 + (Math.random() - .5) * w * .4, y: h * .55, vx: (Math.random() - .5) * 14, vy: -Math.random() * 15 - 5, r: Math.random() * 6.28, vr: (Math.random() - .5) * .35, s: 6 + Math.random() * 7, c: cols[i % cols.length], t: 0 });
+    (function step() {
+      cx.clearRect(0, 0, w, h);
+      bits = bits.filter(function (b) { return b.t < 150 && b.y < h + 40; });
+      bits.forEach(function (b) { b.t++; b.vy += .45; b.vx *= .985; b.x += b.vx; b.y += b.vy; b.r += b.vr; cx.save(); cx.translate(b.x, b.y); cx.rotate(b.r); cx.globalAlpha = Math.min(1, (150 - b.t) / 30); cx.fillStyle = b.c; cx.fillRect(-b.s / 2, -b.s / 4, b.s, b.s / 2); cx.restore(); });
+      if (bits.length) requestAnimationFrame(step); else cv.remove();
+    })();
+  }
+
   function report() {
     var btn = $('send'), msg = $('sendMsg'), day = cur;
     btn.disabled = true; msg.textContent = '';
@@ -242,7 +286,7 @@ footer { text-align: center; color: var(--dim); font-size: .85rem; }
       .then(function (res) {
         if (!res.ok) throw new Error(res.error);
         if (done.indexOf(day) < 0) done.push(day);
-        me.done = done; save(me); render();
+        me.done = done; save(me); render(); confetti();
       })
       .catch(function () { btn.disabled = false; msg.textContent = 'הדיווח לא נשלח. בדקו את החיבור לאינטרנט ונסו שוב.'; });
   }

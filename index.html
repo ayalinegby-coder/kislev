@@ -333,6 +333,10 @@ html { scroll-behavior: smooth; }
 .btn:disabled { background: #d8cbae; color: #6d6252; box-shadow: none; cursor: default; transform: none; }
 a.btn { display: inline-block; text-decoration: none; }
 .quiz-row { margin: 4px 0 14px; }
+.sum-row { display: grid; gap: 8px; padding: 12px; border-radius: 18px; background: #fffdf7; border: 2px solid #fbe0e8; box-shadow: 0 4px 0 #fbe0e8; }
+.sum-row h3 { font-family: var(--hand) !important; font-size: 1.6rem !important; color: #c2566f !important; }
+.sum-vid { display: grid; justify-items: center; }
+.sum-vid video { display: block; width: auto; max-width: 100%; max-height: 62vh; aspect-ratio: 9 / 16; border-radius: 14px; background: #000; box-shadow: 0 6px 16px rgba(0, 0, 0, .2); }
 .btn.quiet { background: transparent; color: var(--paper-2); box-shadow: inset 0 0 0 1.5px var(--line); }
 .btn.quiet:hover { box-shadow: inset 0 0 0 1.5px var(--paper-2); }
 
@@ -532,6 +536,7 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
       <div class="page">
         <h3>התוכנית להיום</h3>
         <p id="dProgram"></p>
+        <div class="sum-row" id="dSum" hidden><h3>סיכום היום בבית הספר 🎉</h3><div class="sum-vid" id="dSumVid"></div></div>
         <p class="quiz-row" id="dQuiz" hidden><button class="btn" id="dQuizBtn" type="button">צפיתן בוידאו? בואו נראה מה אתן זוכרות</button></p>
         <div class="added">
           <h3>הוספנו באור</h3>
@@ -606,7 +611,7 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
   var DAYS = [
     { word: 'אור וחיות', date: 'א׳ כסלו', about: '', program: 'לחיים לחיים!\nהיום הבהיר ראש חודש כסלו, בו הרבי יצא לחסידים לאחר תקופה ארוכה וקשה.\nנצפה יחד בסרטון על סיפור הנס,\nנחפש בדף שלנו איורים שנשמעים בסרטון ונסמן אותם אצלנו.\nבהצלחה!', video: 'assets/a-kislev.mp4', poster: 'assets/a-kislev-poster.jpg', song: 'assets/song-a.mp3', x: .876, y: .37, w: .06, light: [.876, .66, .19], opens: '2026-11-10', lights: '2026-11-11', opensText: 'יום שלישי, ל׳ חשון', lightsText: 'יום רביעי, א׳ כסלו' },
     { word: 'נפשנו', date: 'ט׳–י׳ כסלו', about: 'יום ההולדת ויום ההסתלקות של אדמו״ר האמצעי, ויום גאולתו ממאסר.', program: 'ברוכות הבאות להתוועדות החגיגית לכבוד ט׳-י׳ כסלו, יום הולדתו והסתלקותו וחג הגאולה של אדמו״ר האמצעי!\nמוזמנות להתוועד בליווי המצגת.', slides: 'https://www.canva.com/design/DAHbAgMLhMU/_OTg2P3U7BN89DvfJU5JXQ/view', song: 'assets/song-b.mp3', x: .625, y: .30, w: .06, light: [.625, .55, .165], opens: '2026-11-18', lights: '2026-11-19', opensText: 'יום רביעי, ח׳ כסלו', lightsText: 'יום חמישי, ט׳ כסלו' },
-    { word: 'ניתן', date: 'י״ד כסלו', about: 'יום נישואי הרבי והרבנית.', quiz: true, video: 'assets/yud-kislev.mp4', poster: 'assets/yud-kislev-poster.jpg', song: 'assets/song-c.mp3', x: .365, y: .215, w: .06, light: [.365, .46, .165], opens: '2026-11-23', lights: '2026-11-24', opensText: 'יום שני, י״ג כסלו', lightsText: 'יום שלישי, י״ד כסלו' },
+    { word: 'ניתן', date: 'י״ד כסלו', about: 'יום נישואי הרבי והרבנית.', quiz: true, summary: 'assets/yud-summary.mp4', summaryPoster: 'assets/yud-summary-poster.jpg', video: 'assets/yud-kislev.mp4', poster: 'assets/yud-kislev-poster.jpg', song: 'assets/song-c.mp3', x: .365, y: .215, w: .06, light: [.365, .46, .165], opens: '2026-11-23', lights: '2026-11-24', opensText: 'יום שני, י״ג כסלו', lightsText: 'יום שלישי, י״ד כסלו' },
     { word: 'לנו', date: 'י״ט כסלו', about: 'ראש השנה לחסידות, יום גאולת אדמו״ר הזקן ממאסר. שבוע ההכנה מוביל אל היום הזה.', song: 'assets/song-d.mp3', x: .245, y: .125, w: .071, light: [.165, .36, .2], opens: '2026-11-27', lights: '2026-11-29', opensText: 'יום שישי, י״ז כסלו', lightsText: 'יום ראשון, י״ט כסלו' }
   ];
   var stage = document.getElementById('stage'), dark = document.getElementById('dark'), dctx = dark.getContext('2d');
@@ -714,6 +719,8 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
     var about = document.getElementById('dAbout'); about.textContent = d.about; about.hidden = !d.about;
     var prog = document.getElementById('dProgram'); prog.textContent = d.program || ''; prog.hidden = !d.program;
     var qz = document.getElementById('dQuiz'); qz.hidden = !d.quiz;
+    var sm = document.getElementById('dSum'), smv = document.getElementById('dSumVid'); sm.hidden = !d.summary; smv.textContent = '';
+    if (d.summary) { var sv = document.createElement('video'); sv.controls = true; sv.preload = 'metadata'; sv.playsInline = true; sv.src = d.summary; if (d.summaryPoster) sv.poster = d.summaryPoster; sv.setAttribute('aria-label', 'סרטון סיכום היום'); sv.addEventListener('play', function () { song.pause(); var o = dlg.querySelector('#dSlot video'); if (o) o.pause(); }); smv.appendChild(sv); }
     var slot = document.getElementById('dSlot'); slot.textContent = ''; var oldLink = slot.parentNode.querySelector('.slides-link'); if (oldLink) oldLink.remove();
     if (d.video) {
       var v = document.createElement('video'); v.controls = true; v.preload = 'metadata'; v.playsInline = true; v.src = d.video; v.poster = d.poster;

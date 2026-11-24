@@ -117,6 +117,9 @@ input:focus, textarea:focus { border-color: var(--flame); outline: none; }
 #day .btn:hover { transform: translateY(1px); box-shadow: 0 3px 0 #a8641c; }
 #day .done { border-radius: 16px; background: linear-gradient(135deg, #eaf7e8, #d9f0d4); }
 #day .done strong::before { content: "🎉 "; }
+.sumv { margin: 0 16px; display: grid; gap: 6px; justify-items: center; }
+.sumv video { display: block; width: auto; max-width: 100%; max-height: 70vh; aspect-ratio: 9 / 16; border-radius: 16px; background: #000; box-shadow: 0 0 0 4px #fffaf0, 0 10px 24px rgba(42, 36, 51, .25); }
+.sumv figcaption { font-family: var(--hand); font-size: 1.4rem; color: #c2566f; }
 .cf { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 50; }
 @media (prefers-reduced-motion: reduce) { #day .day-top img { animation: none; } }
 .done strong { font-family: var(--display); font-weight: var(--dw); font-size: 1.3rem; color: #2f6b3a; }
@@ -205,7 +208,7 @@ footer { text-align: center; color: var(--dim); font-size: .85rem; }
       story: 'אהבת ישראל בהידור', storyText: 'החסיד ר׳ ישראל לוין עזר בחום לאדם שכולם התרחקו ממנו. ״כשאוהבים יהודי רק מפני שהוא יהודי, זו אהבת ישראל בהידור.״',
       talk: 'מי בכיתה הכי שונה ממך? מה טוב בה?',
       todo: { lines: ['משימה 1: היום אשים לב מי מהבנות בכיתה לא הגיעה ואתקשר להתעניין בשלומה', 'משימה 2: אתנהג באהבת ישראל מיוחדת עם האחים שלי'], fields: ['ביצעתי את משימה'] } },
-    { date: '2026-11-24', day: 'יום שלישי', heb: 'י״ד כסלו', img: 'pop-chuppah.webp', theme: 'היום שקישר אותנו',
+    { date: '2026-11-24', day: 'יום שלישי', heb: 'י״ד כסלו', img: 'pop-chuppah.webp', summary: 'yud-summary.mp4', summaryPoster: 'yud-summary-poster.jpg', theme: 'היום שקישר אותנו',
       quote: '״כי יניקת וחיות נפש רוח ונשמה של עמי הארץ הוא מנפש רוח ונשמה של הצדיקים והחכמים ראשי בני ישראל שבדורם.״', source: 'תניא, פרק ב׳',
       learn: 'י״ד כסלו הוא יום חתונת הרבי והרבנית. הרבי אמר: ״זה היום שקישר אותי עם החסידים, ואת החסידים איתי״. מתחזקות בקשר לרבי בלימוד תורתו, בקיום הוראותיו ובמעשים טובים.',
       story: 'שמחה בשני מקומות', storyText: 'הורי הרבי לא הורשו לצאת מרוסיה לחתונה בוורשה, ולכן ערכו חגיגה משלהם. באותו לילה נחגגה החתונה בשתי מדינות.',
@@ -281,6 +284,7 @@ footer { text-align: center; color: var(--dim); font-size: .85rem; }
     $('day').style.setProperty('--c', HUES[cur][0]); $('day').style.setProperty('--c-d', HUES[cur][1]);
     $('day').innerHTML =
       '<div class="day-top"><div><p class="date">' + d.day + ' · ' + d.heb + '</p><h2>' + esc(d.theme) + '</h2></div><img src="../assets/' + d.img + '" alt=""></div>' +
+      (d.summary ? '<figure class="sumv"><video controls preload="metadata" playsinline poster="../assets/' + d.summaryPoster + '" src="../assets/' + d.summary + '"></video><figcaption>🎉 סיכום היום בבית הספר</figcaption></figure>' : '') +
       (d.pic ? '<figure class="pic"><img src="../assets/' + d.pic + '" alt="רגע מתוך סרטון הדילמה של היום" loading="lazy"><figcaption>רגע מתוך הדילמה של היום</figcaption></figure>' : '') +
       '<section class="sec"><h3>מה למדנו היום</h3><p class="quote">' + esc(d.quote) + '<small>(' + esc(d.source) + ')</small></p><p>' + esc(d.learn) + '</p></section>' +
       '<section class="sec"><h3>הסיפור: ' + esc(d.story) + '</h3><p>' + esc(d.storyText) + '</p></section>' +

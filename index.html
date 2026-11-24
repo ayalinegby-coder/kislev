@@ -988,7 +988,7 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
       options: ['ללכת עם החברות. מישהי אחרת כבר תזמין אותה', 'להזמין אותה להצטרף למשחק'],
       book: 'הציטוט מתניא, פרק ל״ב, והסיפור על ר׳ ישראל לוין.',
       task: 'משימה 1: היום אשים לב מי מהבנות בכיתה לא הגיעה ואתקשר להתעניין בשלומה. משימה 2: אתנהג באהבת ישראל מיוחדת עם האחים שלי.', kind: 'משימה אישית' },
-    { day: 'יום רביעי', date: '2026-11-25', pop: 'pop-3.webp', dateText: 'ט״ו כסלו', theme: 'הנשמה מאירה בכל מקום',
+    { day: 'יום רביעי', date: '2026-11-25', pop: 'pop-3.webp', dateText: 'ט״ו כסלו', reportFrom: 1, reportWhen: 'ביום שני', theme: 'הנשמה מאירה בכל מקום',
       question: 'בחוג אחר הצהריים אף אחת לא מברכת לפני שהיא אוכלת. מיכל מתביישת לברך. מה היא תעשה?',
       options: ['לוותר הפעם. אף אחת לא תשים לב', 'לברך בשקט ובגאווה, בדיוק כמו בבית'],
       book: 'הציטוט מתניא, פרק ד׳, והסיפור על החסיד הסוחר.',
@@ -1019,14 +1019,14 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
   }
   // Parents' reports from the day before (the parents' page counts every day from י״ב, י״ד included).
   var REPORT_FROM = Date.UTC(2026, 10, 22);
-  function reportDay(p) { var parts = p.date.split('-'); return Math.round((Date.UTC(+parts[0], parts[1] - 1, +parts[2]) - REPORT_FROM) / 864e5) - 1; }
+  function reportDay(p) { if (typeof p.reportFrom === 'number') return p.reportFrom; var parts = p.date.split('-'); return Math.round((Date.UTC(+parts[0], parts[1] - 1, +parts[2]) - REPORT_FROM) / 864e5) - 1; }
   function cheer(p) {
     var d = reportDay(p); if (d < 0) return '';
     var st = prepState(), signed = (st.signed || [])[d] || [], names = ((st.reports || [])[d] || []).slice();
     signed.forEach(function (x) { if (names.indexOf(x) < 0) names.push(x); });
     var n = names.length, html = '<div class="pd-cheer">';
     if (n) {
-      html += '<p>' + (n === 1 ? 'אתמול דיווחה בכיתה שלנו <b>בת אחת</b>! יישר כוח ל:' : 'אתמול דיווחו בכיתה שלנו <b>' + n + '</b> בנות! יישר כוח ל:') + '</p><ul class="pd-names">' +
+      html += '<p>' + (n === 1 ? (p.reportWhen || 'אתמול') + ' דיווחה בכיתה שלנו <b>בת אחת</b>! יישר כוח ל:' : (p.reportWhen || 'אתמול') + ' דיווחו בכיתה שלנו <b>' + n + '</b> בנות! יישר כוח ל:') + '</p><ul class="pd-names">' +
         names.map(function (x, k) { return '<li style="--i:' + k + '">' + esc(x) + (signed.indexOf(x) >= 0 ? '<button type="button" class="pd-unsign" data-name="' + esc(x) + '" aria-label="להסיר את ' + esc(x) + '">×</button>' : '') + '</li>'; }).join('') + '</ul>';
     }
     html += '<form class="pd-sign" data-d="' + d + '"><label for="signName">הביאו חתימה בחוברת? הוסיפי את שמן:</label><div><input id="signName" maxlength="40" placeholder="שם התלמידה" autocomplete="off"><button type="submit">הוספה</button></div></form></div>';

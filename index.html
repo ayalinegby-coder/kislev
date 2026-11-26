@@ -547,11 +547,13 @@ dialog.ad[open] .ad-card { animation: ad-pop .55s cubic-bezier(.2, .9, .3, 1.3) 
 @keyframes ad-run { to { background-position: 100% 0; } }
 @keyframes ad-path { 0% { left: 88%; top: 59%; } 25% { left: 71.6%; top: 62.5%; } 55% { left: 48.8%; top: 64.5%; } 80% { left: 26%; top: 64%; } 100% { left: 13%; top: 67%; } }
 .ad-l1, .ad-l2 { margin: 0; opacity: 0; font-family: var(--display); font-weight: var(--dw); line-height: 1.15; }
-.ad-l1 { font-size: clamp(1.6rem, 5.4vw, 2.6rem); color: #8a1538; animation: ad-in .6s cubic-bezier(.2, .9, .3, 1.4) 3.1s forwards; }
+.ad-l1 { font-size: clamp(1.6rem, 5.4vw, 2.6rem); color: #8a1538; }
+.ad-card.go .ad-l1 { animation: ad-in .6s cubic-bezier(.2, .9, .3, 1.4) 3.1s forwards; }
 .ad-l1 b { display: inline-block; padding: 0 .25em; border-radius: 12px; background: #e8781e; color: #fff; transform: rotate(-4deg); }
-.ad-l2 { margin-top: 10px; font-size: clamp(1.3rem, 4.2vw, 2rem); color: #e8781e; animation: ad-in .6s cubic-bezier(.2, .9, .3, 1.4) 4.6s forwards; }
+.ad-l2 { margin-top: 10px; font-size: clamp(1.3rem, 4.2vw, 2rem); color: #e8781e; }
+.ad-card.go .ad-l2 { animation: ad-in .6s cubic-bezier(.2, .9, .3, 1.4) 4.6s forwards; }
 @keyframes ad-in { from { opacity: 0; transform: translateY(18px) scale(.8); } to { opacity: 1; transform: none; } }
-@media (prefers-reduced-motion: reduce) { .ad-girl { animation: none; left: 13%; top: 67%; } .ad-l1, .ad-l2 { animation: none; opacity: 1; } dialog.ad[open] .ad-card { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .ad-girl { animation: none; left: 13%; top: 67%; } .ad-l1, .ad-l2, .ad-card.go .ad-l1, .ad-card.go .ad-l2 { animation: none; opacity: 1; } dialog.ad[open] .ad-card { animation: none; } }
 </style>
 </head>
 <body>
@@ -1210,11 +1212,15 @@ dialog.ad[open] .ad-card { animation: ad-pop .55s cubic-bezier(.2, .9, .3, 1.3) 
   function showAd() {
     if (adShown || AD_DATES.indexOf(today()) < 0) return;
     adShown = true;
-    setTimeout(function () {
-      var st = document.getElementById('adStage'); st.innerHTML = '<span class="ad-girl"></span>';
-      adDlg.showModal();
-    }, 900);
+    setTimeout(function () { adDlg.showModal(); adPlay(); adLoop = setInterval(adPlay, 8000); }, 900);
   }
+  // Replays the run and the two lines every 8 seconds until the window is closed.
+  var adLoop = null, adCard = adDlg.querySelector('.ad-card');
+  function adPlay() {
+    document.getElementById('adStage').innerHTML = '<span class="ad-girl"></span>';
+    adCard.classList.remove('go'); void adCard.offsetWidth; adCard.classList.add('go');
+  }
+  adDlg.addEventListener('close', function () { clearInterval(adLoop); adLoop = null; });
   document.getElementById('adClose').addEventListener('click', function () { adDlg.close(); });
   adDlg.addEventListener('click', function (e) { if (e.target === adDlg) adDlg.close(); });
   function refreshDoor() {

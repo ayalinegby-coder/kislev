@@ -1212,15 +1212,24 @@ dialog.ad[open] .ad-card { animation: ad-pop .55s cubic-bezier(.2, .9, .3, 1.3) 
   function showAd() {
     if (adShown || AD_DATES.indexOf(today()) < 0) return;
     adShown = true;
-    setTimeout(function () { adDlg.showModal(); adPlay(); adLoop = setInterval(adPlay, 8000); }, 900);
+    setTimeout(adOpen, 900);
   }
+  // After it is closed it comes back every few minutes (only on AD_DATES, only while the page is in view).
+  var AD_AGAIN = 5 * 60 * 1000, adTimer = null;
+  function adOpen() {
+    if (AD_DATES.indexOf(today()) < 0) return;
+    if (adDlg.open) return;
+    if (document.hidden) { adAgain(); return; }
+    adDlg.showModal(); adPlay(); clearInterval(adLoop); adLoop = setInterval(adPlay, 8000);
+  }
+  function adAgain() { clearTimeout(adTimer); adTimer = setTimeout(adOpen, AD_AGAIN); }
   // Replays the run and the two lines every 8 seconds until the window is closed.
   var adLoop = null, adCard = adDlg.querySelector('.ad-card');
   function adPlay() {
     document.getElementById('adStage').innerHTML = '<span class="ad-girl"></span>';
     adCard.classList.remove('go'); void adCard.offsetWidth; adCard.classList.add('go');
   }
-  adDlg.addEventListener('close', function () { clearInterval(adLoop); adLoop = null; });
+  adDlg.addEventListener('close', function () { clearInterval(adLoop); adLoop = null; adAgain(); });
   document.getElementById('adClose').addEventListener('click', function () { adDlg.close(); });
   adDlg.addEventListener('click', function (e) { if (e.target === adDlg) adDlg.close(); });
   function refreshDoor() {

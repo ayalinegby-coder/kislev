@@ -475,6 +475,67 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
   .glow, .lantern.lit .glow, .hand-glow, dialog[open] .book { animation: none; }
   .lamp, .lamp img, .phrase span { transition: none; }
 }
+
+/* ===== י״ט כסלו: farbrengen table (2026-11-26) ===== */
+dialog.yt { width: 100vw; max-width: 100vw; height: 100%; max-height: 100%; margin: 0; inset: 0; overflow: auto; color: var(--ink);
+  background: radial-gradient(circle at 14px 14px, rgba(201, 151, 63, .18) 2px, transparent 2.5px) 0 0 / 28px 28px, radial-gradient(ellipse at 50% 0%, #fff8e6 0%, #f6e7c4 55%, #ecd3a0 100%); }
+dialog.yt::backdrop { background: #f6e7c4; }
+.yt-in { position: relative; max-width: 1180px; margin: 0 auto; padding: 22px 20px 48px; display: grid; gap: 18px; }
+dialog.yt[open] .yt-in { animation: dawn .9s ease both; }
+.yt-back { justify-self: start; border: 0; border-radius: 99px; padding: 8px 18px; font: inherit; font-size: 1rem; cursor: pointer; background: var(--felt); color: var(--paper); box-shadow: 0 3px 0 #0e1230; }
+.yt-head { text-align: center; display: grid; gap: 4px; justify-items: center; }
+.yt-head h2 { margin: 0; font-family: var(--display); font-weight: var(--dw); font-size: clamp(48px, 9vw, 104px); line-height: 1; color: var(--felt);
+  text-shadow: 0 4px 0 #f0b23c, 0 0 34px rgba(240, 178, 60, .55); transform: rotate(-2deg); }
+.yt-head p { margin: 6px 0 0; max-width: 760px; font-family: var(--hand); font-size: clamp(1.35rem, 3vw, 2.1rem); line-height: 1.25; color: #8a4a1f; }
+.yt-gate { justify-self: center; width: min(560px, 100%); display: grid; gap: 14px; justify-items: center; text-align: center; padding: 26px 24px 28px; border-radius: 22px;
+  background: radial-gradient(circle at 12px 12px, rgba(201, 151, 63, .16) 2px, transparent 2.5px) 0 0 / 26px 26px, var(--paper); box-shadow: 0 6px 0 #b85d1c, 0 24px 50px rgba(90, 60, 20, .35); }
+.yt-gate img { width: 84px; filter: drop-shadow(0 0 18px rgba(240, 178, 60, .7)); }
+.yt-gate h3 { margin: 0; font-family: var(--display); font-weight: var(--dw); font-size: 1.8rem; color: var(--felt); }
+.yt-gate p { margin: 0; color: #5d5140; }
+.yt-gate .code input { border-radius: 12px; border-color: #d6b97a; background: #fffaf0; }
+.yt-gate .btn { border-radius: 14px; background: linear-gradient(135deg, #ef8a3c, #e0a12c); color: #fff; font-size: 1.15rem; padding: 12px 30px; box-shadow: 0 4px 0 #a8641c; }
+.yt-msg { min-height: 1.5em; color: #b0452f; font-weight: 700; }
+.yt-stage { position: relative; aspect-ratio: 16 / 9; }
+.yt-stage::before { content: ""; position: absolute; inset: 0; background: url(assets/yt-table.webp) center / contain no-repeat;
+  -webkit-mask-image: radial-gradient(ellipse 54% 60% at 50% 52%, #000 78%, transparent 100%); mask-image: radial-gradient(ellipse 54% 60% at 50% 52%, #000 78%, transparent 100%); }
+.yt-cards { position: absolute; inset: 41% 6% 17% 6%; display: flex; gap: 1.6%; align-items: stretch; margin: 0; padding: 0; list-style: none; }
+.yt-cards li { flex: 1 1 0; min-width: 0; display: flex; }
+.yt-card { --r: -3deg; flex: 1; display: grid; grid-template-rows: minmax(0, 1fr) auto; justify-items: center; gap: 4px; padding: 8% 6% 9%; border: 0; border-radius: 16px; cursor: pointer; font: inherit; color: var(--ink);
+  background: radial-gradient(circle at 8px 8px, rgba(201, 151, 63, .18) 1.5px, transparent 2px) 0 0 / 16px 16px, #fffaf0; border-top: 6px solid var(--c, #ef8a3c);
+  box-shadow: 0 4px 0 #e2cfa3, 0 14px 22px rgba(90, 60, 20, .3); transform: rotate(var(--r)); transition: transform .2s, box-shadow .2s; animation: yt-pop .6s cubic-bezier(.2, .9, .3, 1.3) both; animation-delay: calc(.25s + var(--n) * .12s); }
+.yt-cards li:nth-child(even) .yt-card { --r: 3deg; }
+.yt-card:hover, .yt-card[aria-expanded="true"] { transform: translateY(-8px) rotate(0deg) scale(1.04); box-shadow: 0 6px 0 #e2cfa3, 0 22px 30px rgba(90, 60, 20, .35); }
+.yt-card[aria-expanded="true"] { background-color: #fff3d6; outline: 3px solid var(--c); outline-offset: 2px; }
+.yt-card img { width: 100%; height: 100%; min-height: 0; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(90, 60, 20, .25)); }
+.yt-card b { font-family: var(--display); font-weight: var(--dw); font-size: clamp(.85rem, 1.55vw, 1.25rem); line-height: 1.15; color: var(--felt); text-align: center; }
+.yt-card small { font-size: clamp(.7rem, 1.1vw, .9rem); color: #8a4a1f; }
+@keyframes yt-pop { from { opacity: 0; transform: translateY(40px) scale(.6) rotate(var(--r)); } }
+.yt-panel { scroll-margin-top: 16px; display: grid; gap: 14px; padding: 0 22px 24px; border-radius: 22px; overflow: hidden;
+  background: radial-gradient(circle at 12px 12px, rgba(201, 151, 63, .16) 2px, transparent 2.5px) 0 0 / 26px 26px, var(--paper); box-shadow: 0 6px 0 var(--c-d, #b85d1c), 0 24px 50px rgba(90, 60, 20, .35); animation: dawn .5s ease both; }
+.yt-panel header { position: relative; margin: 0 -22px; padding: 14px 22px 26px; display: flex; align-items: center; gap: 14px; color: #fff;
+  background: radial-gradient(circle at 15% 20%, rgba(255, 255, 255, .25), transparent 40%), linear-gradient(135deg, var(--c), var(--c-d)); }
+.yt-panel header::after { content: ""; position: absolute; inset: auto 0 -1px 0; height: 18px; background: radial-gradient(circle at 10px -2px, transparent 12px, var(--paper) 12.5px) 0 0 / 20px 18px repeat-x; }
+.yt-panel header img { width: 72px; height: 72px; object-fit: contain; flex: none; filter: drop-shadow(0 5px 8px rgba(0, 0, 0, .3)); }
+.yt-panel h3 { margin: 0; font-family: var(--display); font-weight: var(--dw); font-size: clamp(1.5rem, 3vw, 2rem); color: #fff; text-shadow: 0 3px 0 rgba(0, 0, 0, .18); }
+.yt-panel header p { margin: 0; opacity: .95; }
+.yt-panel .slot { border-radius: 14px; overflow: hidden; }
+.yt-panel .yt-soon { margin: 0; padding: 18px; border-radius: 14px; border: 2px dashed #d6b97a; background: #fffaf0; text-align: center; color: #6d6252; }
+.yt-tabs { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.yt-tabs button { border: 0; border-radius: 99px; padding: 8px 20px; font: inherit; font-weight: 700; cursor: pointer; background: #fffaf0; color: var(--c-d); box-shadow: inset 0 0 0 2px var(--c); }
+.yt-tabs button[aria-pressed="true"] { background: var(--c); color: #fff; }
+.yt-panel .btn, .yt-foot .btn { border-radius: 14px; background: linear-gradient(135deg, #ef8a3c, #e0a12c); color: #fff; font-size: 1.1rem; padding: 12px 26px; box-shadow: 0 4px 0 #a8641c; text-decoration: none; display: inline-block; }
+.yt-go { text-align: center; }
+.yt-text { white-space: pre-line; }
+.yt-foot { display: flex; justify-content: center; }
+@media (max-width: 760px) {
+  .yt-in { padding: 16px 14px 40px; }
+  .yt-stage { aspect-ratio: auto; padding-top: 44%; } .yt-stage::before { bottom: auto; height: 0; padding-top: 56.25%; background-size: 100% auto; background-position: 50% 0; }
+  .yt-cards { position: static; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .yt-cards li:last-child { grid-column: 1 / -1; justify-self: center; width: 50%; }
+  .yt-card { padding: 10px 8px 12px; } .yt-card img { height: 92px; }
+  .yt-card b { font-size: 1.05rem; } .yt-card small { font-size: .85rem; }
+}
+@media (prefers-reduced-motion: reduce) { dialog.yt[open] .yt-in, .yt-card, .yt-panel { animation: none; } }
 </style>
 </head>
 <body>
@@ -589,7 +650,14 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
       </div>
       <button class="pb-final" id="pbFinal" type="button"></button>
       <section class="pd" id="prepDay" aria-live="polite"></section>
-      <section class="secret" id="secret" aria-labelledby="secretTitle"></section>
+    </div>
+  </dialog>
+
+  <dialog class="yt" id="ytDlg" aria-labelledby="ytTitle">
+    <div class="yt-in">
+      <button class="yt-back" id="ytClose" type="button">→ חזרה לנוף</button>
+      <header class="yt-head"><h2 id="ytTitle" tabindex="-1">גוט יום טוב!</h2><p>לשנה טובה בלימוד החסידות ובדרכי החסידות תכתבו ותחתמו</p></header>
+      <div id="ytBody"></div>
     </div>
   </dialog>
 
@@ -612,7 +680,7 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
     { word: 'אור וחיות', date: 'א׳ כסלו', about: '', program: 'לחיים לחיים!\nהיום הבהיר ראש חודש כסלו, בו הרבי יצא לחסידים לאחר תקופה ארוכה וקשה.\nנצפה יחד בסרטון על סיפור הנס,\nנחפש בדף שלנו איורים שנשמעים בסרטון ונסמן אותם אצלנו.\nבהצלחה!', video: 'assets/a-kislev.mp4', poster: 'assets/a-kislev-poster.jpg', song: 'assets/song-a.mp3', x: .876, y: .37, w: .06, light: [.876, .66, .19], opens: '2026-11-10', lights: '2026-11-11', opensText: 'יום שלישי, ל׳ חשון', lightsText: 'יום רביעי, א׳ כסלו' },
     { word: 'נפשנו', date: 'ט׳–י׳ כסלו', about: 'יום ההולדת ויום ההסתלקות של אדמו״ר האמצעי, ויום גאולתו ממאסר.', program: 'ברוכות הבאות להתוועדות החגיגית לכבוד ט׳-י׳ כסלו, יום הולדתו והסתלקותו וחג הגאולה של אדמו״ר האמצעי!\nמוזמנות להתוועד בליווי המצגת.', slides: 'https://www.canva.com/design/DAHbAgMLhMU/_OTg2P3U7BN89DvfJU5JXQ/view', song: 'assets/song-b.mp3', x: .625, y: .30, w: .06, light: [.625, .55, .165], opens: '2026-11-18', lights: '2026-11-19', opensText: 'יום רביעי, ח׳ כסלו', lightsText: 'יום חמישי, ט׳ כסלו' },
     { word: 'ניתן', date: 'י״ד כסלו', about: 'יום נישואי הרבי והרבנית.', quiz: true, summary: 'assets/yud-summary.mp4', summaryPoster: 'assets/yud-summary-poster.jpg', video: 'assets/yud-kislev.mp4', poster: 'assets/yud-kislev-poster.jpg', song: 'assets/song-c.mp3', x: .365, y: .215, w: .06, light: [.365, .46, .165], opens: '2026-11-23', lights: '2026-11-24', opensText: 'יום שני, י״ג כסלו', lightsText: 'יום שלישי, י״ד כסלו' },
-    { word: 'לנו', date: 'י״ט כסלו', about: 'ראש השנה לחסידות, יום גאולת אדמו״ר הזקן ממאסר. שבוע ההכנה מוביל אל היום הזה.', song: 'assets/song-d.mp3', x: .245, y: .125, w: .071, light: [.165, .36, .2], opens: '2026-11-27', lights: '2026-11-29', opensText: 'יום שישי, י״ז כסלו', lightsText: 'יום ראשון, י״ט כסלו' }
+    { word: 'לנו', date: 'י״ט כסלו', yt: true, about: 'ראש השנה לחסידות, יום גאולת אדמו״ר הזקן ממאסר. שבוע ההכנה מוביל אל היום הזה.', song: 'assets/song-d.mp3', x: .245, y: .125, w: .071, light: [.165, .36, .2], opens: '2026-11-27', lights: '2026-11-29', opensText: 'יום שישי, י״ז כסלו', lightsText: 'יום ראשון, י״ט כסלו' }
   ];
   var stage = document.getElementById('stage'), dark = document.getElementById('dark'), dctx = dark.getContext('2d');
   var statusEl = document.getElementById('status');
@@ -707,8 +775,9 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
     var v = dlg.querySelector('video'); if (v) v.pause();
     song.play().catch(songLabel);
   });
-  function openDay(i) {
+  function openDay(i, plain) {
     current = i; var d = DAYS[i];
+    if (d.yt && !plain && (d.lit || isOpen(d))) { openYT(); return; }
     if (!d.lit && !isOpen(d)) {
       document.getElementById('waitTitle').textContent = d.word + ' עוד מחכה';
       document.getElementById('waitText').textContent = 'התוכנית תיפתח ב' + d.opensText + ', והעששית תידלק ב' + d.lightsText + '.';
@@ -721,7 +790,7 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
     var qz = document.getElementById('dQuiz'); qz.hidden = !d.quiz;
     var sm = document.getElementById('dSum'), smv = document.getElementById('dSumVid'); sm.hidden = !d.summary; smv.textContent = '';
     if (d.summary) { var sv = document.createElement('video'); sv.controls = true; sv.preload = 'metadata'; sv.playsInline = true; sv.src = d.summary; if (d.summaryPoster) sv.poster = d.summaryPoster; sv.setAttribute('aria-label', 'סרטון סיכום היום'); sv.addEventListener('play', function () { song.pause(); var o = dlg.querySelector('#dSlot video'); if (o) o.pause(); }); smv.appendChild(sv); }
-    var slot = document.getElementById('dSlot'); slot.textContent = ''; var oldLink = slot.parentNode.querySelector('.slides-link'); if (oldLink) oldLink.remove();
+    var slot = document.getElementById('dSlot'); slot.textContent = ''; slot.hidden = !!d.yt; var oldLink = slot.parentNode.querySelector('.slides-link'); if (oldLink) oldLink.remove();
     if (d.video) {
       var v = document.createElement('video'); v.controls = true; v.preload = 'metadata'; v.playsInline = true; v.src = d.video; v.poster = d.poster;
       v.setAttribute('aria-label', 'סרטון ' + d.date); v.addEventListener('play', function () { song.pause(); }); slot.appendChild(v);
@@ -1006,7 +1075,7 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
   ];
   var SECRET = 'לחיים', SECRET_FROM = PREP[4].date;
   var door = document.getElementById('door'), prepDlg = document.getElementById('prepDlg'), trail = document.getElementById('trail');
-  var prepDayEl = document.getElementById('prepDay'), secretEl = document.getElementById('secret'), prepCur = -1, prepSig = '';
+  var prepDayEl = document.getElementById('prepDay'), secretEl = document.createElement('div'), prepCur = -1, prepSig = '';
   function prepOpenDay(p) { return allOpen || today() >= p.date; }
   function prepStarted() { return prepOpenDay(PREP[0]); }
   function prepState(id) { return classState(id || classId) || {}; }
@@ -1104,30 +1173,6 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
       '<li class="pd-step"><div><h4>המשימה <span class="pill kind">' + esc(p.kind) + '</span></h4><p>' + esc(p.task) + '</p>' + cheer(p) + '</div></li>' +
       '</ol></article>';
     var vids = prepDayEl.querySelectorAll('video'); if (vids[1]) vids[1].addEventListener('ended', function () { confetti(180); });
-    renderSecret();
-  }
-  function renderSecret() {
-    var solved = !!prepState().secret, ready = allOpen || today() >= SECRET_FROM;
-    if (solved) {
-      secretEl.innerHTML = '<div class="reveal"><img src="assets/lantern-on.png" alt=""><strong>לחיים!</strong><p>גיליתן את המילה הסודית. ביום י״ט כסלו יצא אדמו״ר הזקן לחופשי ממאסרו, ומאז מברכים זה את זה: ״לחיים! לשנה טובה בלימוד החסידות ובדרכי החסידות״. נתראה בחג!</p></div>';
-      return;
-    }
-    secretEl.innerHTML = '<h3 id="secretTitle">המילה הסודית</h3><p>בכל יום מתחבאת בסרטון הדילמה אות מאירה אחת. ' + (ready ? 'כתבו כאן את חמש האותיות לפי סדר הימים:' : 'ב' + PREP[4].day + ', ' + PREP[4].dateText + ', תוכלו לכתוב כאן את חמש האותיות ולגלות את המילה.') + '</p>' +
-      (ready ? '<div class="code" id="code">' + [0, 1, 2, 3, 4].map(function (k) { return '<input maxlength="1" inputmode="text" autocomplete="off" aria-label="אות ' + (k + 1) + '">'; }).join('') + '</div><button class="btn" id="codeGo" type="button">לפתוח</button><p class="secret-msg" id="codeMsg" aria-live="polite"></p>' : '');
-    if (!ready) return;
-    var ins = [].slice.call(secretEl.querySelectorAll('.code input')), code = document.getElementById('code'), msg = document.getElementById('codeMsg');
-    ins.forEach(function (inp, k) {
-      inp.addEventListener('input', function () { inp.value = inp.value.trim().slice(-1); if (inp.value && ins[k + 1]) ins[k + 1].focus(); });
-      inp.addEventListener('keydown', function (e) { if (e.key === 'Backspace' && !inp.value && ins[k - 1]) ins[k - 1].focus(); if (e.key === 'Enter') go(); });
-    });
-    function go() {
-      var plain = function (t) { return t.replace(/ך/g, 'כ').replace(/ם/g, 'מ').replace(/ן/g, 'נ').replace(/ף/g, 'פ').replace(/ץ/g, 'צ'); };
-      var w = plain(ins.map(function (i) { return i.value; }).join(''));
-      if (w === plain(SECRET)) { setPrep('secret'); renderSecret(); return; }
-      msg.textContent = 'כמעט! בדקו שוב את האותיות בחוברת.';
-      code.classList.remove('shake'); void code.offsetWidth; code.classList.add('shake');
-    }
-    document.getElementById('codeGo').addEventListener('click', go);
   }
   function openPrep() {
     if (prepCur < 0 || !prepOpenDay(PREP[prepCur])) { prepCur = -1; PREP.forEach(function (p, i) { if (prepOpenDay(p)) prepCur = i; }); if (allOpen) prepCur = 0; }
@@ -1179,6 +1224,70 @@ dialog[open] .book { animation: rise .7s cubic-bezier(.2, .9, .3, 1.05); transfo
   setInterval(function () { if (!document.hidden) pull(); }, 60000);
   document.addEventListener('visibilitychange', function () { if (!document.hidden) pull(); });
   requestAnimationFrame(loop);
+
+  // ===== י״ט כסלו: code "לחיים" opens the farbrengen table (2026-11-26) =====
+  var YT = [
+    { id: 'learn', icon: 'yt-i1.webp', title: 'לימוד הכנה לתפילה', sub: 'לכל הכיתות', c: ['#5d9a4b', '#3c6e30'] },
+    { id: 'slides', icon: 'yt-i2.webp', title: 'מצגת מלווה להתוועדות', sub: 'לכל הכיתות', c: ['#4a86cc', '#2a5a96'] },
+    { id: 'story', icon: 'yt-i3.webp', title: 'סרטון סיפור י״ט כסלו', sub: 'המאסר והגאולה', c: ['#e0645a', '#a93a35'], video: 'assets/yt-story.mp4', poster: 'assets/yt-story-poster.jpg' },
+    { id: 'craft', icon: 'yt-i4.webp', title: 'הסבר היצירה', sub: 'א׳–ג׳ · ד׳–ו׳', c: ['#9064c8', '#5f3c94'], parts: [{ label: 'כיתות א׳–ג׳' }, { label: 'כיתות ד׳–ו׳' }] },
+    { id: 'escape', icon: 'yt-i5.webp', title: 'חדר בריחה', sub: 'לכיתות ה׳–ו׳', c: ['#ef8a3c', '#b85d1c'], href: 'https://claude.ai/artifact/781tCoFAY9tkpzh8RNiqfX', go: 'לחדר הבריחה ←', text: 'הבריחה מהמבצר: חדר בריחה לכיתות ה׳–ו׳ בעקבות המאסר של אדמו״ר הזקן. נפתח בחלון חדש.' }
+  ];
+  var ytDlg = document.getElementById('ytDlg'), ytBody = document.getElementById('ytBody'), ytOpen = -1;
+  function plainHeb(t) { return t.replace(/ך/g, 'כ').replace(/ם/g, 'מ').replace(/ן/g, 'נ').replace(/ף/g, 'פ').replace(/ץ/g, 'צ'); }
+  function openYT() { ytOpen = -1; renderYT(); ytDlg.showModal(); ytDlg.scrollTop = 0; startSong(DAYS[3]); }
+  function renderYT() {
+    if (!prepState().secret) {
+      ytBody.innerHTML = '<section class="yt-gate" aria-labelledby="ytGateT"><img src="assets/lantern-on.png" alt=""><h3 id="ytGateT">הקוד לכניסה</h3><p>בכל יום של שבוע ההכנה התחבאה בסרטון הדילמה אות מאירה אחת. כתבו כאן את חמש האותיות לפי סדר הימים:</p>' +
+        '<div class="code" id="ytCode">' + [0, 1, 2, 3, 4].map(function (k) { return '<input maxlength="1" inputmode="text" autocomplete="off" aria-label="אות ' + (k + 1) + '">'; }).join('') + '</div>' +
+        '<button class="btn" id="ytGo" type="button">להיכנס לשולחן ההתוועדות</button><p class="yt-msg" id="ytMsg" aria-live="polite"></p></section>';
+      var ins = [].slice.call(ytBody.querySelectorAll('input')), code = document.getElementById('ytCode'), msg = document.getElementById('ytMsg');
+      ins.forEach(function (inp, k) {
+        inp.addEventListener('input', function () { inp.value = inp.value.trim().slice(-1); if (inp.value && ins[k + 1]) ins[k + 1].focus(); });
+        inp.addEventListener('keydown', function (e) { if (e.key === 'Backspace' && !inp.value && ins[k - 1]) ins[k - 1].focus(); if (e.key === 'Enter') go(); });
+      });
+      function go() {
+        if (plainHeb(ins.map(function (i) { return i.value; }).join('')) === plainHeb(SECRET)) { setPrep('secret'); renderYT(); confetti(200); return; }
+        msg.textContent = 'כמעט! בדקו שוב את האותיות שמצאתן בסרטונים.';
+        code.classList.remove('shake'); void code.offsetWidth; code.classList.add('shake');
+      }
+      document.getElementById('ytGo').addEventListener('click', go);
+      setTimeout(function () { if (ins[0]) ins[0].focus(); }, 300);
+      return;
+    }
+    ytBody.innerHTML = '<div class="yt-stage"><ul class="yt-cards">' + YT.map(function (it, k) {
+      return '<li><button class="yt-card" type="button" data-k="' + k + '" aria-expanded="' + (k === ytOpen) + '" aria-controls="ytPanel" style="--n:' + k + ';--c:' + it.c[0] + '"><img src="assets/' + it.icon + '" alt=""><span><b>' + it.title + '</b><br><small>' + it.sub + '</small></span></button></li>';
+    }).join('') + '</ul></div><div id="ytPanelWrap"></div>' +
+      '<div class="yt-foot"><button class="btn" id="ytLight" type="button">' + (DAYS[3].lit ? 'ההחלטה הטובה והעששית ←' : 'סיימנו? להחלטה הטובה ולהדלקת העששית ←') + '</button></div>';
+    [].forEach.call(ytBody.querySelectorAll('.yt-card'), function (b) { b.addEventListener('click', function () { var k = +b.dataset.k; ytOpen = ytOpen === k ? -1 : k; showPanel(true); }); });
+    document.getElementById('ytLight').addEventListener('click', function () { ytDlg.close(); openDay(3, true); });
+    showPanel(false);
+  }
+  function showPanel(scroll) {
+    [].forEach.call(ytBody.querySelectorAll('.yt-card'), function (b) { b.setAttribute('aria-expanded', +b.dataset.k === ytOpen); });
+    var wrap = document.getElementById('ytPanelWrap'); song.pause();
+    [].forEach.call(wrap.querySelectorAll('video'), function (v) { v.pause(); });
+    if (ytOpen < 0) { wrap.innerHTML = ''; return; }
+    var it = YT[ytOpen];
+    wrap.innerHTML = '<section class="yt-panel" id="ytPanel" style="--c:' + it.c[0] + ';--c-d:' + it.c[1] + '"><header><img src="assets/' + it.icon + '" alt=""><div><h3>' + it.title + '</h3><p>' + it.sub + '</p></div></header>' +
+      (it.parts ? '<div class="yt-tabs">' + it.parts.map(function (pt, j) { return '<button type="button" data-j="' + j + '" aria-pressed="' + (j === 0) + '">' + pt.label + '</button>'; }).join('') + '</div><div id="ytPart"></div>' : body(it)) + '</section>';
+    if (it.parts) {
+      var tabs = [].slice.call(wrap.querySelectorAll('.yt-tabs button')), part = document.getElementById('ytPart');
+      var pick = function (j) { tabs.forEach(function (t, q) { t.setAttribute('aria-pressed', q === j); }); part.innerHTML = body(it.parts[j]); };
+      tabs.forEach(function (t, j) { t.addEventListener('click', function () { pick(j); }); }); pick(0);
+    }
+    if (scroll) document.getElementById('ytPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  function body(it) {
+    var h = '';
+    if (it.text) h += '<p class="yt-text">' + esc(it.text) + '</p>';
+    if (it.video) h += '<div class="slot"><video controls preload="metadata" playsinline src="' + it.video + '"' + (it.poster ? ' poster="' + it.poster + '"' : '') + '></video></div>';
+    if (it.embed) h += '<div class="slot"><iframe src="' + it.embed + '" loading="lazy" allowfullscreen allow="fullscreen" title="' + esc(it.title || it.label || '') + '"></iframe></div>';
+    if (it.href) h += '<p class="yt-go"><a class="btn" href="' + it.href + '" target="_blank" rel="noopener">' + esc(it.go || 'לפתיחה ←') + '</a></p>';
+    return h || '<p class="yt-soon">החומר יעלה לכאן בקרוב ✨</p>';
+  }
+  document.getElementById('ytClose').addEventListener('click', function () { ytDlg.close(); });
+  ytDlg.addEventListener('close', function () { song.pause(); [].forEach.call(ytDlg.querySelectorAll('video'), function (v) { v.pause(); }); });
 })();
 </script>
 </body>

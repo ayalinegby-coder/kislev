@@ -157,6 +157,17 @@ input:focus, textarea:focus { border-color: var(--flame); outline: none; }
 footer::before { content: "🏮 "; }
 .soon { text-align: center; color: var(--paper-2); }
 footer { text-align: center; color: var(--dim); font-size: .85rem; }
+/* Jingle lyric clip card (2026-11-26) */
+.jingle { margin-top: 22px; border-radius: 22px; overflow: hidden; padding: 0 18px 20px; border-bottom: 0; box-shadow: 0 6px 0 #5f3c94, 0 30px 70px rgba(0, 0, 0, .6);
+  background: radial-gradient(circle at 12px 12px, rgba(201, 151, 63, .16) 2px, transparent 2.5px) 0 0 / 26px 26px, var(--paper); }
+.jingle .j-top { position: relative; margin: 0 -18px; padding: 14px 18px 24px; display: flex; align-items: center; gap: 14px; color: #fff;
+  background: radial-gradient(circle at 15% 20%, rgba(255, 255, 255, .25), transparent 40%), linear-gradient(135deg, #9064c8, #5f3c94); }
+.jingle .j-top::after { content: ""; position: absolute; inset: auto 0 -1px 0; height: 18px; background: radial-gradient(circle at 10px -2px, transparent 12px, var(--paper) 12.5px) 0 0 / 20px 18px repeat-x; }
+.jingle .j-top img { width: 78px; height: auto; flex: none; filter: drop-shadow(0 6px 8px rgba(0, 0, 0, .3)); animation: pd-bob 3.2s ease-in-out infinite; }
+.jingle h2 { color: #fff; font-size: 1.6rem; text-shadow: 0 3px 0 rgba(0, 0, 0, .18); }
+.jingle .j-top p { margin-top: 2px; opacity: .95; }
+.jingle video { display: block; width: 100%; aspect-ratio: 16 / 9; border-radius: 14px; background: #000; box-shadow: 0 0 0 4px #fffaf0, 0 10px 24px rgba(42, 36, 51, .25); }
+@media (prefers-reduced-motion: reduce) { .jingle .j-top img { animation: none; } }
 </style>
 </head>
 <body>
@@ -185,6 +196,10 @@ footer { text-align: center; color: var(--dim); font-size: .85rem; }
   <section id="app" hidden>
     <nav class="days" id="days" aria-label="ימי שבוע ההכנה"></nav>
     <article class="card" id="day" aria-live="polite"></article>
+    <section class="card jingle" aria-labelledby="jTitle">
+      <div class="j-top"><img src="../assets/lyrics-icon.webp" alt=""><div><h2 id="jTitle">הג׳ינגל של שבוע ההכנה</h2><p>קליפ המילים · שרות יחד גם בבית!</p></div></div>
+      <video controls preload="none" playsinline poster="../assets/lyrics-poster.jpg" src="../assets/lyrics.mp4"></video>
+    </section>
   </section>
 
   <p class="soon" id="soon" hidden></p>

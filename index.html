@@ -533,6 +533,25 @@ dialog.yt[open] .yt-in { animation: dawn .9s ease both; }
   .yt-card b { font-size: 1.05rem; } .yt-card small { font-size: .85rem; }
 }
 @media (prefers-reduced-motion: reduce) { dialog.yt[open] .yt-in, .yt-card, .yt-panel { animation: none; } }
+/* ===== Marathon pop-up "ad" in the prep screen (2026-11-27) ===== */
+dialog.ad { width: min(720px, calc(100vw - 24px)); }
+dialog.ad::backdrop { background: rgba(10, 12, 24, .72); }
+.ad-card { position: relative; overflow: hidden; border-radius: 24px; background: #fff; box-shadow: 0 0 0 6px #e8781e, 0 30px 70px rgba(0, 0, 0, .6); padding: 10px 16px 22px; text-align: center; }
+dialog.ad[open] .ad-card { animation: ad-pop .55s cubic-bezier(.2, .9, .3, 1.3) both; }
+@keyframes ad-pop { from { transform: scale(.4) rotate(-6deg); opacity: 0; } }
+.ad-x { position: absolute; top: 10px; inset-inline-end: 12px; z-index: 3; width: 40px; height: 40px; border: 0; border-radius: 50%; background: #8a1538; color: #fff; font-size: 1.5rem; line-height: 1; cursor: pointer; }
+.ad-tag { position: absolute; top: 14px; inset-inline-start: 14px; z-index: 3; padding: 3px 12px; border-radius: 99px; background: #fde7d3; color: #b5501a; font-weight: 700; font-size: .85rem; }
+.ad-stage { position: relative; aspect-ratio: 3 / 2; background: url(assets/marathon-logo.webp) center / contain no-repeat; }
+.ad-girl { position: absolute; width: 10.5%; aspect-ratio: 181 / 300; transform: translate(-50%, -100%); background: url(assets/run-sprite.webp) 0 0 / 3000% 100% no-repeat;
+  left: 88%; top: 59%; animation: ad-run .42s steps(29) 6, ad-path 2.5s linear forwards; filter: drop-shadow(0 6px 4px rgba(0, 0, 0, .25)); }
+@keyframes ad-run { to { background-position: 100% 0; } }
+@keyframes ad-path { 0% { left: 88%; top: 59%; } 25% { left: 71.6%; top: 62.5%; } 55% { left: 48.8%; top: 64.5%; } 80% { left: 26%; top: 64%; } 100% { left: 13%; top: 67%; } }
+.ad-l1, .ad-l2 { margin: 0; opacity: 0; font-family: var(--display); font-weight: var(--dw); line-height: 1.15; }
+.ad-l1 { font-size: clamp(1.6rem, 5.4vw, 2.6rem); color: #8a1538; animation: ad-in .6s cubic-bezier(.2, .9, .3, 1.4) 3.1s forwards; }
+.ad-l1 b { display: inline-block; padding: 0 .25em; border-radius: 12px; background: #e8781e; color: #fff; transform: rotate(-4deg); }
+.ad-l2 { margin-top: 10px; font-size: clamp(1.3rem, 4.2vw, 2rem); color: #e8781e; animation: ad-in .6s cubic-bezier(.2, .9, .3, 1.4) 4.6s forwards; }
+@keyframes ad-in { from { opacity: 0; transform: translateY(18px) scale(.8); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .ad-girl { animation: none; left: 13%; top: 67%; } .ad-l1, .ad-l2 { animation: none; opacity: 1; } dialog.ad[open] .ad-card { animation: none; } }
 </style>
 </head>
 <body>
@@ -655,6 +674,16 @@ dialog.yt[open] .yt-in { animation: dawn .9s ease both; }
       <button class="yt-back" id="ytClose" type="button">→ חזרה לנוף</button>
       <header class="yt-head"><h2 id="ytTitle" tabindex="-1">גוט יום טוב!</h2><p>לשנה טובה בלימוד החסידות ובדרכי החסידות תכתבו ותחתמו</p></header>
       <div id="ytBody"></div>
+    </div>
+  </dialog>
+
+  <dialog class="ad" id="adDlg" aria-label="מרתוניא: היום בהפסקה כל חתימה שווה 2">
+    <div class="ad-card">
+      <button class="ad-x" id="adClose" type="button" aria-label="סגירה">×</button>
+      <span class="ad-tag">מרתוניא</span>
+      <div class="ad-stage" id="adStage"></div>
+      <p class="ad-l1">היום בהפסקה כל חתימה שווה <b>2</b></p>
+      <p class="ad-l2">רוצו להבחן והוסיפו אור</p>
     </div>
   </dialog>
 
@@ -1174,7 +1203,20 @@ dialog.yt[open] .yt-in { animation: dawn .9s ease both; }
   function openPrep() {
     if (prepCur < 0 || !prepOpenDay(PREP[prepCur])) { prepCur = -1; PREP.forEach(function (p, i) { if (prepOpenDay(p)) prepCur = i; }); if (allOpen) prepCur = 0; }
     buildBook(); renderPrep(); prepDlg.showModal(); prepDlg.scrollTop = 0;
+    showAd();
   }
+  // Marathon "ad": pops once per page load over the prep screen, only on the listed dates.
+  var AD_DATES = ['2026-11-27'], adShown = false, adDlg = document.getElementById('adDlg');
+  function showAd() {
+    if (adShown || AD_DATES.indexOf(today()) < 0) return;
+    adShown = true;
+    setTimeout(function () {
+      var st = document.getElementById('adStage'); st.innerHTML = '<span class="ad-girl"></span>';
+      adDlg.showModal();
+    }, 900);
+  }
+  document.getElementById('adClose').addEventListener('click', function () { adDlg.close(); });
+  adDlg.addEventListener('click', function (e) { if (e.target === adDlg) adDlg.close(); });
   function refreshDoor() {
     door.classList.toggle('locked', !prepStarted());
     door.setAttribute('aria-label', 'שבוע ההכנה לי״ט כסלו' + (prepStarted() ? '. פתיחה' : ', נפתח ביום ראשון, י״ב כסלו'));
